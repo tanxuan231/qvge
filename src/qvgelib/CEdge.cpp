@@ -33,7 +33,7 @@ CEdge::CEdge(QGraphicsItem *parent): Shape(parent)
 	auto flags = ItemIsSelectable | ItemSendsGeometryChanges | ItemIsMovable | ItemUsesExtendedStyleOption;
 	setFlags(flags);
 	
-	// no selection frame
+    // no selection frame 是否启用无边框选择（frameless selection）
 	setItemFlag(IF_FramelessSelection);
 
 	// accept hovers
@@ -140,7 +140,8 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem* /*op
 {
 	double weight = getVisibleWeight();
 
-	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(attr_style).toString(), Qt::SolidLine);
+    Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(
+                getAttribute(attr_style).toString(), Qt::SolidLine);
 
 	// get color (to optimize!)
 	QColor color = getAttribute(attr_color).value<QColor>();

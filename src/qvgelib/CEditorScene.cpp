@@ -1388,6 +1388,8 @@ void CEditorScene::needUpdate()
 
 void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+    qDebug()<<__FUNCTION__;
+
 	if (mouseEvent->button() == Qt::LeftButton)
 	{
 		m_cancelled = false;
@@ -1495,6 +1497,8 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	if (entered) 
 		return;
 	entered = true;
+
+    qDebug()<<__FUNCTION__<<mouseEvent->scenePos();
 
 	// ignore if cancelled
 	if (m_cancelled)
@@ -2088,6 +2092,8 @@ QPointF CEditorScene::getSnapped(const QPointF& pos) const
 	{
 		QPointF newPos(pos);
 
+        // 将点击位置 newPos 进行一定的调整，
+        // 如果 x 或 y 坐标小于 0，则向左或向上移动半个网格大小，否则向右或向下移动半个网格大小
 		if (newPos.x() < 0)
 			newPos.setX(newPos.x() - m_gridSize / 2);
 		else
@@ -2098,6 +2104,8 @@ QPointF CEditorScene::getSnapped(const QPointF& pos) const
 		else
 			newPos.setY(newPos.y() + m_gridSize / 2);
 
+        // 将 newPos 的 x 和 y 坐标分别对网格大小进行取模，并将结果向下取整，得到最近的网格点坐标。
+        // 这样就可以保证 newPos 与网格对齐了。
 		newPos.setX((int)newPos.x() - (int)newPos.x() % m_gridSize);
 		newPos.setY((int)newPos.y() - (int)newPos.y() % m_gridSize);
 

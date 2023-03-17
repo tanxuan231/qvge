@@ -21,7 +21,7 @@ CEditorView::CEditorView(QWidget *parent)
 	: Super(parent),
 	m_menuModeTmp(Qt::PreventContextMenu)
 {
-    setAttribute(Qt::WA_TranslucentBackground, false);
+    setAttribute(Qt::WA_TranslucentBackground, false);  // 禁用窗口的半透明背景
 	setViewportUpdateMode(BoundingRectViewportUpdate);
 	//setViewport(new QGLWidget);
 
@@ -199,6 +199,7 @@ void CEditorView::mousePressEvent(QMouseEvent *e)
 	// ignore when dragging
 	if (e->button() == Qt::RightButton && getDragItem())
 	{
+        // 避免在拖动图形项时弹出上下文菜单
 		e->accept();
 		return;
 	}
@@ -220,15 +221,18 @@ void CEditorView::mouseMoveEvent(QMouseEvent *e)
 	{
 		if (dragMode() != ScrollHandDrag)
 		{
+            // 开启手势滚动模式，并禁用上下文菜单、拖拽和交互功能。
 			m_menuModeTmp = contextMenuPolicy();
-			setContextMenuPolicy(Qt::PreventContextMenu);
+            setContextMenuPolicy(Qt::PreventContextMenu); // 禁用上下文菜单
 
 			m_dragModeTmp = dragMode();
 			setDragMode(ScrollHandDrag);
 
 			m_interactiveTmp = isInteractive();
-			setInteractive(false);
+            setInteractive(false);  // 禁用交互
 
+            // 创建了一个模拟的鼠标按下事件
+            // 在 Qt 中，只有在鼠标按下事件被处理过后，才能开启手势滚动模式
 			QMouseEvent fake(e->type(), e->pos(), Qt::LeftButton, Qt::LeftButton, e->modifiers());
 			Super::mousePressEvent(&fake);
 		}
