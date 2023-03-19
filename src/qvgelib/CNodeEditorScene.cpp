@@ -984,7 +984,7 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d, bool snapped)
 	for (auto item : items)
 		item->moveBy(d.x(), d.y());
 
-	if (snapped)
+    if (snapped)    // 网格对齐处理
 		for (auto item : items)
 			item->setPos(getSnapped(item->pos()));
 
@@ -992,7 +992,7 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d, bool snapped)
 		edge->onItemMoved(d);
 
 	if (focusItem)
-		focusItem->ensureVisible();
+        focusItem->ensureVisible(); // 图形项（QGraphicsItem）滚动到可见范围内
 }
 
 

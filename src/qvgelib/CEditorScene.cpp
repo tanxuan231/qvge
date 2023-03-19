@@ -1498,7 +1498,6 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		return;
 	entered = true;
 
-    qDebug()<<__FUNCTION__<<mouseEvent->scenePos();
 
 	// ignore if cancelled
 	if (m_cancelled)
@@ -1549,6 +1548,7 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		// moved after single click?
 		if (m_dragInProgress && onClickDrag(mouseEvent, m_leftClickPos))
 		{
+            qDebug()<<__FUNCTION__<<" 1 "<<mouseEvent->scenePos();
 			moveDrag(mouseEvent, m_startDragItem, true);
 			entered = false;
 			return;
@@ -1558,7 +1558,7 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		Super::mouseMoveEvent(mouseEvent);
 
 		m_draggedItem = mouseGrabberItem();
-
+        qDebug()<<__FUNCTION__<<" 2 "<<mouseEvent->scenePos();
 		moveDrag(mouseEvent, m_draggedItem, false);
 
 		updateCursorState();
@@ -1568,6 +1568,7 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	}
 
 	// custom dragging
+    qDebug()<<__FUNCTION__<<" 3 "<<mouseEvent->scenePos();
 	moveDrag(mouseEvent, m_startDragItem, m_dragInProgress);
 
 	entered = false;
@@ -1641,7 +1642,7 @@ void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 
 			QSet<IInteractive*> oldHovers = m_acceptedHovers + m_rejectedHovers;
 
-			QList<QGraphicsItem*> hoveredItems = dragItem->collidingItems();
+            QList<QGraphicsItem*> hoveredItems = dragItem->collidingItems();    // 碰撞项
 
 			for (auto hoverItem: hoveredItems)
 			{

@@ -359,7 +359,7 @@ protected:
 	QGraphicsItem *m_draggedItem = nullptr;
 	QSet<IInteractive*> m_acceptedHovers, m_rejectedHovers;
 
-	CItem *m_editItem = nullptr;
+    CItem *m_editItem = nullptr;    // 编辑文字
 
 	// pimpl
 	class CEditorScene_p* m_pimpl = nullptr;
