@@ -165,15 +165,12 @@ void CEditorScene::setGridPen(const QPen &gridPen)
 void CEditorScene::enableItemLabels(bool on)
 {
 	m_labelsEnabled = on;
-
-	layoutItemLabels();
 }
 
 void CEditorScene::setFontAntialiased(bool on)
 {
 	m_isFontAntialiased = on;
 
-	layoutItemLabels();
 
 	update();
 }
@@ -921,7 +918,7 @@ void CEditorScene::onSceneChanged()
 {
 	Q_EMIT sceneChanged();
 
-	layoutItemLabels();
+//	layoutItemLabels();
 }
 
 
@@ -944,7 +941,7 @@ void CEditorScene::drawBackground(QPainter *painter, const QRectF &)
 	// update layout if needed
 	if (m_labelsUpdate)
 	{
-		layoutItemLabels();
+//		layoutItemLabels();
 	}
 
 	// fill background
@@ -1003,45 +1000,6 @@ bool CEditorScene::checkLabelRegion(const QRectF &r)
 	return true;
 }
 
-
-void CEditorScene::layoutItemLabels()
-{
-	// reset region
-	m_usedLabelsRegion = QPainterPath();
-
-	QList<CItem*> allItems = getItems<CItem>();
-
-	// hide all if disabled
-	if (!m_labelsEnabled)
-	{
-		for (auto citem : allItems)
-		{
-			citem->showLabel(false);
-		}
-
-		return;
-	}
-
-	QElapsedTimer tm;
-	tm.start();
-
-	// else layout texts
-	for (auto citem : allItems)
-	{
-		citem->updateLabelContent();
-
-		citem->updateLabelPosition();
-
-		QRectF labelRect = citem->getSceneLabelRect();
-		QRectF reducedRect(labelRect.topLeft() / 10, labelRect.size() / 10);
-		
-		citem->showLabel(checkLabelRegion(reducedRect));
-	}
-
-	//qDebug() << "layout labels: " << tm.elapsed();
-}
-
-
 void CEditorScene::needUpdate()
 {
 	//m_labelsUpdate = true;
@@ -1058,12 +1016,12 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	// workaround: do not deselect selected items by RMB
 	if (mouseEvent->button() != Qt::LeftButton)
 	{
-		mouseEvent->accept();
+        mouseEvent->accept();   // 避免将已选中的图形项取消选中状态，从而避免出现一些不必要的问题
 		return;
 	}
 
 	Super::mousePressEvent(mouseEvent);
-
+    qDebug()<<__FUNCTION__<<" ==============";
 	if (mouseEvent->button() == Qt::LeftButton)
 	{
 		m_draggedItem = NULL;
@@ -1080,8 +1038,8 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 	m_mousePos = mouseEvent->scenePos();
 
-	m_draggedItem = mouseGrabberItem();
-
+    m_draggedItem = mouseGrabberItem(); // 获取当前拥有鼠标焦点的图形项
+    qDebug()<<__FUNCTION__<<" m_draggedItem: "<<m_draggedItem;
 	moveDrag(mouseEvent, m_draggedItem, false);
 
 
@@ -1120,7 +1078,7 @@ void CEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsIt
 		{
 			QPointF d = mouseEvent->scenePos() - m_lastDragPos;	// delta pos
 			m_lastDragPos = mouseEvent->scenePos();
-			moveSelectedItemsBy(d);
+            moveSelectedItemsBy(d);
 		}
 
 		return;
@@ -1149,8 +1107,8 @@ void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 
 			QSet<CItem*> oldHovers = m_acceptedHovers + m_rejectedHovers;
 
-			QList<QGraphicsItem*> hoveredItems = dragItem->collidingItems();
-
+            QList<QGraphicsItem*> hoveredItems = dragItem->collidingItems();    // 与当前图形项碰撞的所有图形项的列表
+            qDebug()<<"hoveredItems size: "<<hoveredItems.size();
 			for (int i = 0; i < hoveredItems.size(); ++i)
 			{
 				// dont drop on disabled
@@ -1234,7 +1192,7 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	Super::mouseReleaseEvent(mouseEvent);
 
 	m_draggedItem = mouseGrabberItem();
-
+    qDebug()<<__FUNCTION__<<" ==============";
 	if (mouseEvent->button() == Qt::LeftButton)
 	{
 		if (m_dragInProgress)
@@ -1422,6 +1380,7 @@ void CEditorScene::updateCursorState()
 		//	return;
 		//}
 
+        qDebug()<<__FUNCTION__<<" 1 Qt::SizeAllCursor";
 		setSceneCursor(Qt::SizeAllCursor);
 		return;
 	}
@@ -1440,6 +1399,7 @@ void CEditorScene::updateCursorState()
 
 			if (mouseButtons == Qt::NoButton)
 			{
+//                qDebug()<<__FUNCTION__<<" 2 Qt::SizeAllCursor";
 				setSceneCursor(Qt::SizeAllCursor);
 				return;
 			}

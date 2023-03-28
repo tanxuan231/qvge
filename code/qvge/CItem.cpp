@@ -19,8 +19,6 @@ bool CItem::s_duringRestore = false;
 
 CItem::CItem()
 {
-	m_labelItem = NULL;
-
 	// default item flags
 	m_itemFlags = IF_DeleteAllowed | IF_FramelessSelection;
 	m_internalStateFlags = IS_Attribute_Changed | IS_Need_Update;
@@ -185,119 +183,6 @@ void CItem::copyDataFrom(CItem* from)
 	updateCachedItems();
 }
 
-
-// painting
-
-void CItem::updateLabelContent()
-{
-	auto scene = getScene();
-	if (!scene)
-		return;
-
-	if (!(m_internalStateFlags & IS_Attribute_Changed) && 
-		!(scene->itemLabelsEnabled()) &&
-		!(scene->itemLabelsNeedUpdate())
-	)
-		return;
-
-	resetItemStateFlag(IS_Attribute_Changed);
-
-	if (!m_labelItem)
-		return;
-
-	QString labelToShow;
-	auto idsToShow = getVisibleAttributeIds(CItem::VF_LABEL);
-	
-	QMap<QByteArray, QString> visibleLabels;
-	for (const QByteArray& id : idsToShow)
-	{
-        QString text = CUtils::variantToText(getAttribute(id));
-		if (text.size())
-			visibleLabels[id] = text;
-	}
-
-	if (visibleLabels.size() == 1)
-	{
-		labelToShow = visibleLabels.values().first();
-	}
-	else if (visibleLabels.size() > 1)
-	{
-		// if label & id:
-		if (visibleLabels.size() == 2 && idsToShow.contains("id") && idsToShow.contains("label"))
-		{
-			labelToShow = QString("[%1]\n%2").arg(visibleLabels["id"]).arg(visibleLabels["label"]);
-		}
-		else
-		{
-			for (auto it = visibleLabels.constBegin(); it != visibleLabels.constEnd(); ++it)
-			{
-				if (labelToShow.size())
-					labelToShow += "\n";
-
-				labelToShow += QString("%1: %2").arg(QString(it.key())).arg(it.value());
-			}
-		}
-	}
-
-	setLabelText(labelToShow);
-
-    // label attrs
-    QFont f = getAttribute("label.font").value<QFont>();
-
-	if (!scene->isFontAntialiased())
-		f.setStyleStrategy(QFont::NoAntialias);
-
-    m_labelItem->setFont(f);
-
-    QColor c = getAttribute("label.color").value<QColor>();
-    m_labelItem->setBrush(c);
-}
-
-
-void CItem::updateLabelDecoration()
-{
-	if (!m_labelItem)
-		return;
-
-	if (m_internalStateFlags & IS_Selected)
-		m_labelItem->setBrush(QColor("orange"));
-	else
-	{
-		QColor c = getAttribute("label.color").value<QColor>();
-		//if (c.isValid())
-			m_labelItem->setBrush(c);
-	}
-}
-
-
-void CItem::setLabelText(const QString& text)
-{
-	if (m_labelItem)
-		m_labelItem->setText(text);
-}
-
-
-void CItem::showLabel(bool on)
-{
-	if (m_labelItem)
-	{
-		m_labelItem->setVisible(on);
-
-		if (on)
-			updateLabelDecoration();
-	}
-}
-
-
-QRectF CItem::getSceneLabelRect() const 
-{
-	if (!m_labelItem)
-		return QRectF();
-	
-	return m_labelItem->mapRectToScene(m_labelItem->boundingRect());
-}
-
-
 // callbacks
 
 void CItem::onItemRestored()
@@ -312,8 +197,6 @@ void CItem::onItemSelected(bool state)
 		m_internalStateFlags |= IS_Selected;
 	else
 		m_internalStateFlags &= ~IS_Selected;
-
-	updateLabelDecoration();
 }
 
 

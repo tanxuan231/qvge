@@ -107,14 +107,6 @@ public:
 
 	void addUndoState();
 
-	// labels
-	virtual void updateLabelContent();
-	virtual void updateLabelDecoration();
-	virtual void updateLabelPosition() {}
-	void setLabelText(const QString& text);
-	void showLabel(bool on);
-	QRectF getSceneLabelRect() const;
-
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;
 	virtual bool restoreFrom(QDataStream& out, quint64 version64);
@@ -160,7 +152,7 @@ protected:
 	int m_internalStateFlags;
 	QMap<QByteArray, QVariant> m_attributes;
 	QString m_id;
-	QGraphicsSimpleTextItem *m_labelItem;
+//	QGraphicsSimpleTextItem *m_labelItem;
 
 	// restore optimization
 	static bool s_duringRestore;

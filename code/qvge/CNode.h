@@ -113,7 +113,6 @@ protected:
 	virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
 	virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event); 
 
-	virtual void updateLabelPosition();
 	virtual void updateCachedItems();
 
 private:

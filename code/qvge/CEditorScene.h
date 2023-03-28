@@ -14,6 +14,7 @@ It can be used freely, maintaining the information above.
 #include <QSet>
 #include <QMenu>
 #include <QByteArrayList>
+#include <QPainterPath>
 
 #include "CAttribute.h"
 
@@ -177,7 +178,6 @@ public:
 
 	// other
 	bool checkLabelRegion(const QRectF& r);
-	void layoutItemLabels();
 
 	void needUpdate();
 
@@ -289,7 +289,7 @@ private:
 	QSet<CItem*> m_acceptedHovers, m_rejectedHovers;
 
 	QGraphicsItem *m_menuTriggerItem;
-	QGraphicsItem *m_draggedItem;
+    QGraphicsItem *m_draggedItem;   // 鼠标焦点的图形项
 
 	bool m_needUpdateItems;
 

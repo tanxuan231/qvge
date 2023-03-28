@@ -19,7 +19,6 @@ public:
 
 	CDirectConnection(QGraphicsItem *parent = Q_NULLPTR);
 
-	void setBendFactor(int bf);
 
 	// reimp
 	static QByteArray factoryId() { return "CDirectConnection"; }
@@ -33,12 +32,11 @@ public:
 protected:
 	// reimp
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
-	virtual void updateLabelPosition();
 
 	// callbacks 
 	virtual void onParentGeometryChanged();
 
 protected:
-	int m_bendFactor;
+//	int m_bendFactor;
 	QPointF m_controlPoint, m_controlPos;
 };

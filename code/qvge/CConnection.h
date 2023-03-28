@@ -78,17 +78,13 @@ public:
 
 protected:
 	virtual void setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
-	virtual void drawArrow(QPainter *painter, const QStyleOptionGraphicsItem *option, bool first, const QLineF &direction) const;
-	virtual void drawArrow(QPainter *painter, qreal shift, const QLineF &direction) const;
-	QLineF calculateArrowLine(const QPainterPath &path, bool first, const QLineF &direction) const;
 
 	// reimp
 	virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
 	virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
 
 	// cached attributes
-	virtual void updateCachedItems();
-	virtual void updateArrowFlags(const QString& direction);
+	virtual void updateCachedItems();	
 
 protected:
     union{

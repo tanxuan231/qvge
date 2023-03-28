@@ -6,6 +6,7 @@
 #include <QBrush>
 #include <QEvent>
 #include <QtMath>
+#include <QDebug>
 
 // test
 #include <QGraphicsDropShadowEffect>
@@ -19,7 +20,7 @@ CNode::CNode(QGraphicsItem* parent) : QGraphicsRectItem(parent)
 	setItemFlag(IF_FramelessSelection);
 
 	// default size
-	resize(9);
+    resize(2);
 
 	// default node flags
 	m_nodeFlags = NF_OrphanAllowed;
@@ -36,12 +37,12 @@ CNode::CNode(QGraphicsItem* parent) : QGraphicsRectItem(parent)
 	setCacheMode(DeviceCoordinateCache);
 
 	// label
-	m_labelItem = new QGraphicsSimpleTextItem(this);
-	m_labelItem->setFlags(0);
-	m_labelItem->setCacheMode(DeviceCoordinateCache);
-	m_labelItem->setPen(Qt::NoPen);
-	m_labelItem->setAcceptedMouseButtons(Qt::NoButton);
-	m_labelItem->setAcceptHoverEvents(false);
+//	m_labelItem = new QGraphicsSimpleTextItem(this);
+//	m_labelItem->setFlags(0);
+//	m_labelItem->setCacheMode(DeviceCoordinateCache);
+//	m_labelItem->setPen(Qt::NoPen);
+//	m_labelItem->setAcceptedMouseButtons(Qt::NoButton);
+//	m_labelItem->setAcceptHoverEvents(false);
 }
 
 
@@ -430,7 +431,7 @@ void CNode::updateConnections()
 
 		if (values.count() == 1)
 		{
-			values.first()->setBendFactor(0);
+//			values.first()->setBendFactor(0);
 		}
 		else
 		{
@@ -440,7 +441,7 @@ void CNode::updateConnections()
 
 				for (auto conn : values)
 				{
-					conn->setBendFactor(bf++);
+//					conn->setBendFactor(bf++);
 				}
 			}
 			else
@@ -449,7 +450,7 @@ void CNode::updateConnections()
 
 				for (auto conn : values)
 				{
-					conn->setBendFactor(bf);
+//					conn->setBendFactor(bf);
 
 					if (bf > 0)
 						bf = 0 - bf;
@@ -474,6 +475,7 @@ void CNode::onConnectionDeleted(CConnection *conn)
 
 void CNode::onItemMoved(const QPointF& /*delta*/)
 {
+    qDebug()<<__FUNCTION__<<" m_connections size: "<<m_connections.size();
 	for (CConnection *conn : m_connections)
 	{
 		conn->onNodeMoved(this); 
@@ -615,27 +617,7 @@ void CNode::updateCachedItems()
 		{
 			edge->onParentGeometryChanged();
 		}
-
-		// update text label
-		if (getScene() && getScene()->itemLabelsEnabled())
-		{
-			updateLabelPosition();
-			updateLabelDecoration();
-		}
 	}
-}
-
-
-void CNode::updateLabelPosition()
-{
-	int w = m_labelItem->boundingRect().width();
-	int h = m_labelItem->boundingRect().height();
-
-	QRectF r = Shape::boundingRect();
-	if (r.width() < 30 || r.height() < 30)
-		m_labelItem->setPos(-w / 2, boundingRect().height() / 2);	// if too small: put label on bottom
-	else
-		m_labelItem->setPos(-w / 2, -h / 2);		// else center
 }
 
 

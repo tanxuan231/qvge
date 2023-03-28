@@ -31,8 +31,8 @@ CConnection::CConnection(QGraphicsItem *parent): Shape(parent)
 
 	//setBoundingRegionGranularity(1);
 
-	// non-movable but selectable
-	auto flags = ItemIsSelectable | ItemSendsGeometryChanges | ItemIsMovable | ItemUsesExtendedStyleOption;
+	// non-movable but selectable    
+    auto flags = ItemIsSelectable | ItemSendsGeometryChanges | ItemIsMovable | ItemUsesExtendedStyleOption;
 	setFlags(flags);
 	
 	// no selection frame
@@ -43,13 +43,6 @@ CConnection::CConnection(QGraphicsItem *parent): Shape(parent)
 
 	// cache
 	//setCacheMode(DeviceCoordinateCache);
-
-	// label
-	m_labelItem = new QGraphicsSimpleTextItem(this);
-	m_labelItem->setFlags(0);
-	m_labelItem->setCacheMode(DeviceCoordinateCache);
-	m_labelItem->setPen(Qt::NoPen);
-	m_labelItem->setAcceptedMouseButtons(Qt::NoButton);
 }
 
 
@@ -76,11 +69,6 @@ bool CConnection::hasLocalAttribute(const QByteArray& attrId) const
 
 bool CConnection::setAttribute(const QByteArray& attrId, const QVariant& v)
 {
-	if (attrId == "direction")
-	{
-		updateArrowFlags(v.toString());
-	}
-
 	bool res = Super::setAttribute(attrId, v);
 
 	if (res) update();
@@ -92,11 +80,6 @@ bool CConnection::removeAttribute(const QByteArray& attrId)
 {
 	bool res = Super::removeAttribute(attrId);
 
-	if (attrId == "direction")
-	{
-		updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
-	}
-
 	if (res) update();
 	return res;
 }
@@ -107,28 +90,7 @@ bool CConnection::removeAttribute(const QByteArray& attrId)
 void CConnection::updateCachedItems()
 {
 	Super::updateCachedItems();
-
-	updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
 }
-
-
-void CConnection::updateArrowFlags(const QString& direction)
-{
-	if (direction == "directed")
-	{
-		setItemFlag(CF_End_Arrow);
-		resetItemFlag(CF_Start_Arrow);
-	}
-	else if (direction == "mutual")
-	{
-		setItemFlag(CF_Mutual_Arrows);
-	}
-	else if (direction == "undirected")
-	{
-		resetItemFlag(CF_Mutual_Arrows);
-	}
-}
-
 
 // reimp
 
@@ -176,79 +138,7 @@ void CConnection::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem
 	}
 }
 
-
-QLineF CConnection::calculateArrowLine(const QPainterPath &path, bool first, const QLineF &direction) const
-{
-	// optimization: disable during drag or pan
-	Qt::MouseButtons buttons = QGuiApplication::mouseButtons();
-	if ((buttons & Qt::LeftButton) || (buttons & Qt::RightButton))
-		return direction;
-
-	// optimization: disable during zoom
-	Qt::KeyboardModifiers keys = QGuiApplication::keyboardModifiers();
-	if (keys & Qt::ControlModifier)
-		return direction;
-
-
-	if (first && m_firstNode)
-	{
-		qreal shift = m_firstNode->getDistanceToLineEnd(direction);
-		qreal arrowStart = path.percentAtLength(shift + ARROW_SIZE);
-		return QLineF(path.pointAtPercent(arrowStart), direction.p2());
-	}
-	else if (!first && m_lastNode)
-	{
-		qreal len = path.length();
-		qreal shift = m_lastNode->getDistanceToLineEnd(direction);
-		qreal arrowStart = path.percentAtLength(len - shift - ARROW_SIZE);
-		return QLineF(path.pointAtPercent(arrowStart), direction.p2());
-	}
-
-	return direction;
-}
-
-
-void CConnection::drawArrow(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, bool first, const QLineF& direction) const
-{
-	if (first && m_firstNode)
-	{
-		qreal shift = m_firstNode->getDistanceToLineEnd(direction);
-		drawArrow(painter, shift, direction);
-	}
-	else if (!first && m_lastNode)
-	{
-		qreal shift = m_lastNode->getDistanceToLineEnd(direction);
-		drawArrow(painter, shift, direction);
-	}
-}
-
-
-void CConnection::drawArrow(QPainter* painter, qreal shift, const QLineF& direction) const
-{
-	static QPolygonF arrowHead;
-	if (arrowHead.isEmpty())
-		arrowHead << QPointF(0, 0) << QPointF(-ARROW_SIZE/2, ARROW_SIZE) << QPointF(ARROW_SIZE/2, ARROW_SIZE) << QPointF(0, 0);
-
-	QPen oldPen = painter->pen();
-	painter->save();
-
-	painter->setPen(QPen(oldPen.color(), oldPen.widthF(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
-	painter->setBrush(oldPen.color());
-
-	static QLineF hl(0, 0, 0, 100);
-	qreal a = direction.angleTo(hl);
-
-	painter->translate(direction.p2());
-	painter->rotate(180 + a);
-	painter->translate(QPointF(0, shift + oldPen.widthF()));
-	painter->drawPolygon(arrowHead);
-
-	painter->restore();
-}
-
-
 // IO 
-
 bool CConnection::storeTo(QDataStream &out, quint64 version64) const
 {
 	Super::storeTo(out, version64);

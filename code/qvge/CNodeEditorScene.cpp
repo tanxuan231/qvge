@@ -128,6 +128,7 @@ bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 	QGraphicsItem* item = getItemAt(pos);
 	if (item)
 	{
+        // 如果移动过程中点击了node，则拉伸这条线段
 		if (!item->isEnabled())
 			return false;
 
@@ -143,6 +144,7 @@ bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 	}
 	else
 	{
+        // 如果没有点击node，则新建一个node
 		m_realStart = true;
 		m_startNode = createNewNode();
 		item = m_startNode;
@@ -252,18 +254,8 @@ void CNodeEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	bool isDragging = (mouseEvent->buttons() & Qt::LeftButton);
 
-	if (m_doubleClick)
-	{
-		m_doubleClick = false;
-
-		// moved after double click?
-		if (isDragging && !onDoubleClickDrag(mouseEvent, m_leftClickPos))
-		{
-			return;
-		}
-	}
-
 	// no double click and no drag
+    qDebug()<<__FUNCTION__<<" m_startDragItem: "<<m_startDragItem<<" isDragging: "<<isDragging;
 	if (m_startDragItem == NULL)
 	{
 		// moved after single click?
@@ -349,6 +341,7 @@ void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPointF &clickPos)
 {
 	QGraphicsItem* item = getItemAt(clickPos);
+
 	if (item)
 	{
 		if (!item->isEnabled())
@@ -358,6 +351,7 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 			return false;
 
 		CItem *citem = dynamic_cast<CItem*>(item);
+        qDebug()<<__FUNCTION__<<" citem: "<<citem;
 		if (citem)
 		{
 			// clone?
@@ -388,10 +382,10 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 			// else handle by item
 			if (!citem->onClickDrag(mouseEvent, clickPos))
 				return false;
-		}
+        }
 
 		// else start drag of item
-		startDrag(item);
+        startDrag(item);
 		return true;
 	}
 
@@ -577,11 +571,12 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 			items << item; 
 	}
 
+//    qDebug()<<"move items size: "<<items.size();
 	for (auto item : items)
 		item->moveBy(d.x(), d.y());
 
-	for (auto edge : edges)
-		edge->onItemMoved(d);
+//    for (auto edge : edges)
+//        edge->onItemMoved(d);   // 对于CConection来说，设置了ItemIsMovable，此处不需要执行
 }
 
 
