@@ -9,10 +9,7 @@ It can be used freely, maintaining the information above.
 
 #include <qvgeNodeEditorUIController.h>
 #include <qvgeMainWindow.h>
-#include <CCommutationTable.h>
 #include <CSceneOptionsDialog.h>
-#include <CNodeEdgePropertiesUI.h>
-#include <CClassAttributesEditorUI.h>
 #include <COGDFLayoutUIController.h>
 #include <COGDFNewGraphDialog.h>
 #include <COGDFLayout.h>
@@ -30,6 +27,7 @@ It can be used freely, maintaining the information above.
 #include <qvge/CFileSerializerDOT.h>
 #include <qvge/ISceneItemFactory.h>
 
+#include <QApplication>
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QDockWidget>
@@ -67,9 +65,6 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
 
 	// menus & actions
 	createMenus();
-
-	// dock panels
-	createPanels();
 
     // status bar
     m_statusLabel = new QLabel();
@@ -285,38 +280,6 @@ void qvgeNodeEditorUIController::createMenus()
 	zoomToolbar->addAction(unzoomAction);
 	zoomToolbar->addAction(fitZoomAction);
 }
-
-
-void qvgeNodeEditorUIController::createPanels()
-{
-	// propertis
-    QDockWidget *propertyDock = new QDockWidget(tr("Item Properties"));
-    propertyDock->setObjectName("propertyDock");
-	m_parent->addDockWidget(Qt::RightDockWidgetArea, propertyDock);
-
-    CNodeEdgePropertiesUI *propertiesPanel = new CNodeEdgePropertiesUI(propertyDock);
-    propertiesPanel->setScene(m_editorScene);
-    propertyDock->setWidget(propertiesPanel);
-
-	// connections
-    QDockWidget *connectionsDock = new QDockWidget(tr("Topology"));
-    connectionsDock->setObjectName("connectionsDock");
-	m_parent->addDockWidget(Qt::RightDockWidgetArea, connectionsDock);
-
-    CCommutationTable *connectionsPanel = new CCommutationTable(connectionsDock);
-	connectionsDock->setWidget(connectionsPanel);
-	connectionsPanel->setScene(m_editorScene);
-
-    // default properties
-    QDockWidget *defaultsDock = new QDockWidget(tr("Default Properties"));
-    defaultsDock ->setObjectName("defaultsDock");
-    m_parent->addDockWidget(Qt::LeftDockWidgetArea, defaultsDock);
-
-    CClassAttributesEditorUI *defaultsPanel = new CClassAttributesEditorUI(defaultsDock);
-    defaultsPanel->setScene(m_editorScene);
-    defaultsDock->setWidget(defaultsPanel);
-}
-
 
 void qvgeNodeEditorUIController::createNavigator()
 {

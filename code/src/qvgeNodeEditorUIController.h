@@ -63,7 +63,6 @@ private Q_SLOTS:
 
 private:
 	void createMenus();
-	void createPanels();
     void createNavigator();
 
 private:
