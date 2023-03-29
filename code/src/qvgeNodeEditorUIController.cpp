@@ -9,7 +9,6 @@ It can be used freely, maintaining the information above.
 
 #include <qvgeNodeEditorUIController.h>
 #include <qvgeMainWindow.h>
-#include <COGDFLayout.h>
 
 #include <qvge/CNode.h>
 #include <qvge/CConnection.h>
@@ -561,7 +560,8 @@ bool qvgeNodeEditorUIController::loadFromFile(const QString &fileName, const QSt
 	}
 
     // else via ogdf
-    return (COGDFLayout::loadGraph(fileName.toStdString(), *m_editorScene));
+    return false;
+//    return (COGDFLayout::loadGraph(fileName.toStdString(), *m_editorScene));
 }
 
 
