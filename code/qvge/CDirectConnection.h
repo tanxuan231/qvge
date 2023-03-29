@@ -35,8 +35,4 @@ protected:
 
 	// callbacks 
 	virtual void onParentGeometryChanged();
-
-protected:
-//	int m_bendFactor;
-	QPointF m_controlPoint, m_controlPos;
 };

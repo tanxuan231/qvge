@@ -1010,7 +1010,6 @@ void CEditorScene::needUpdate()
 
 
 // mousing
-
 void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	// workaround: do not deselect selected items by RMB
@@ -1563,7 +1562,7 @@ void CEditorScene::focusInEvent(QFocusEvent *focusEvent)
 
 
 // menu stuff 
-
+// 处理右键菜单事件
 void CEditorScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent)
 {
 	QMenu sceneMenu;

@@ -152,7 +152,6 @@ protected:
 	int m_internalStateFlags;
 	QMap<QByteArray, QVariant> m_attributes;
 	QString m_id;
-//	QGraphicsSimpleTextItem *m_labelItem;
 
 	// restore optimization
 	static bool s_duringRestore;

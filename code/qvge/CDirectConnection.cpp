@@ -15,17 +15,12 @@ It can be used freely, maintaining the information above.
 
 CDirectConnection::CDirectConnection(QGraphicsItem *parent): Super(parent)
 {
-
 }
 
 // reimp
-
 CConnection* CDirectConnection::clone()
 {
 	CDirectConnection* c = new CDirectConnection(parentItem());
-
-	//c->setFirstNode(m_firstNode);
-	//c->setLastNode(m_lastNode);
 
 	// assign directly!
 	c->m_firstNode = m_firstNode;
@@ -69,11 +64,9 @@ void CDirectConnection::onParentGeometryChanged()
 	QLineF l(p1, p2);
     setLine(l);
 
-//	// update shape path
+    // update shape path
     QPainterPath path;
     path.moveTo(p1);
-    // center
-    m_controlPos = (p1 + p2) / 2;
     path.lineTo(p2);
 
     QPainterPathStroker stroker;    // 对path进行描边操作

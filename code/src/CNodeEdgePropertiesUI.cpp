@@ -339,7 +339,7 @@ void CNodeEdgePropertiesUI::on_NodeLabel_clicked()
 	if (nodes.count() != 1)
 		return;
 
-	m_scene->onActionEditLabel(nodes.first());
+//	m_scene->onActionEditLabel(nodes.first());
 }
 
 
@@ -460,7 +460,7 @@ void CNodeEdgePropertiesUI::on_EdgeLabel_clicked()
 	if (edges.count() != 1)
 		return;
 
-	m_scene->onActionEditLabel(edges.first());
+//	m_scene->onActionEditLabel(edges.first());
 }
 
 
