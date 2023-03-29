@@ -374,7 +374,7 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 			// add nodes?
 			if (m_editMode == EM_AddNodes)
 			{
-				setEditMode(EM_Default);
+//				setEditMode(EM_Default);
 				return startNewConnection(clickPos);
 			}
 
@@ -484,7 +484,7 @@ void CNodeEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphi
 		// clicked on empty space?
 		if (!clickedItem)
 		{
-			setEditMode(EM_Default);			
+//			setEditMode(EM_Default);
 			onLeftDoubleClick(mouseEvent, clickedItem);
 			return;
 		}
