@@ -2,7 +2,6 @@
 #include "CNode.h"
 #include "CConnection.h"
 #include "CDirectConnection.h"
-#include "CControlPoint.h"
 
 #include <QGraphicsSceneMouseEvent>
 #include <QColorDialog> 
@@ -428,14 +427,6 @@ void CNodeEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphics
 {
 	if (gridSnapEnabled())
 	{
-		// control point:
-		if (auto cp = dynamic_cast<CControlPoint*>(dragItem))
-		{
-			auto newPos = getSnapped(cp->scenePos());
-			cp->setPos(newPos);
-			return;
-		}
-
 		// nodes & edges:
 		QSet<QGraphicsItem*> items;
 		QSet<CConnection*> edges;
@@ -655,23 +646,6 @@ void CNodeEditorScene::drawItems(QPainter *painter, int numItems, QGraphicsItem 
     }
 
 }
-
-//
-//void CNodeEditorScene::updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
-//{
-//	if (mouseEvent->buttons() == Qt::NoButton)
-//	{
-//		if (dynamic_cast<CControlPoint*>(hoverItem))
-//		{
-//			setSceneCursor(Qt::CrossCursor);
-//			return;
-//		}
-//	}
-//
-//	return Super::updateMovedCursor(mouseEvent, hoverItem);
-//}
-
-
 
 // selections
 

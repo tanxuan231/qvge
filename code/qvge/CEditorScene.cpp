@@ -13,7 +13,6 @@ It can be used freely, maintaining the information above.
 #include "CSimpleUndoManager.h"
 #include "CDiffUndoManager.h"
 #include "IContextMenuProvider.h"
-#include "ISceneItemFactory.h"
 
 #include <QPainter>
 #include <QPaintEngine>
@@ -486,13 +485,6 @@ CItem* CEditorScene::getActiveItemFactory(const QByteArray& typeId) const
 
 CItem* CEditorScene::createItemOfType(const QByteArray &id) const
 {
-	// check for filter
-	if (m_itemFactoryFilter)
-	{
-		if (CItem* item = m_itemFactoryFilter->createItemOfType(id, *this))
-			return item;
-	}
-
 	// else default creation
 	if (m_itemFactories.contains(id))
 	{

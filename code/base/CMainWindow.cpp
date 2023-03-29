@@ -208,25 +208,6 @@ void CMainWindow::fillNewFileMenu()
         connect(m_newDocument, SIGNAL(triggered()), this, SLOT(createNewDocument()));
         m_newDocument->setEnabled(true);
     }
-    else
-    {
-        QMenu *newActionsMenu = new QMenu();
-        m_newDocument->setMenu(newActionsMenu);
-
-        for (const QByteArray& docType : m_docTypeCreate)
-        {
-            const CDocument& doc = m_docTypes[docType];
-            QAction *newAction = newActionsMenu->addAction(doc.name);
-            newAction->setData(docType);
-            newAction->setStatusTip(doc.description);
-        }
-
-		newActionsMenu->setDefaultAction(newActionsMenu->actions().first());
-		connect(m_newDocument, SIGNAL(triggered()), newActionsMenu->defaultAction(), SIGNAL(triggered()));
-
-        connect(newActionsMenu, SIGNAL(triggered(QAction*)), this, SLOT(createNewDocument(QAction*)));
-        m_newDocument->setEnabled(true);
-    }
 }
 
 
@@ -766,7 +747,7 @@ void CMainWindow::createHelpMenu()
 	auto helpMenu = new QMenu(tr("&Help"));
 	menuBar()->addMenu(helpMenu);
 
-	helpMenu->addAction(tr("About &Qt..."), qApp, SLOT(aboutQt()));
+//	helpMenu->addAction(tr("About &Qt..."), qApp, SLOT(aboutQt()));
 	helpMenu->addAction(tr("&About..."), this, SLOT(onAboutApplication()));
 }
 

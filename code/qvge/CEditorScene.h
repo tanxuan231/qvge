@@ -98,10 +98,6 @@ public:
 	template<class T>
 	T* createItemOfType(QPointF* at = NULL) const;
 
-	void setItemFactoryFilter(ISceneItemFactory *filter) {
-		m_itemFactoryFilter = filter;
-	}
-
 	// attributes
 	QByteArray getSuperClassId(const QByteArray& classId) const {
 		if (m_classToSuperIds.contains(classId))
@@ -270,7 +266,6 @@ protected:
 
 	QMap<QByteArray, CItem*> m_itemFactories;
 	QMap<QByteArray, CItem*> m_activeItemFactory;
-	ISceneItemFactory *m_itemFactoryFilter = NULL;
 
 	QMap<QByteArray, QByteArray> m_classToSuperIds;
 

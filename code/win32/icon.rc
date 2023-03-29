@@ -17,8 +17,8 @@ IDI_ICON1               ICON                    "icon.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,4,2,0
- PRODUCTVERSION 0,4,2,0
+ FILEVERSION 0,1,2,0
+ PRODUCTVERSION 0,1,2,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -33,14 +33,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4"
         BEGIN
-            VALUE "CompanyName", "A.Masiuk"
-            VALUE "FileDescription", "Qt Visual Graph Editor Win32 Executable"
-            VALUE "FileVersion", "0.4.2.0"
-            VALUE "InternalName", "qvge"
-            VALUE "LegalCopyright", "Copyright (C) 2016-2018 A.Masiuk"
+            VALUE "CompanyName", "IDEA"
+            VALUE "FileDescription", "Road Design Tool Win32 Executable"
+            VALUE "FileVersion", "0.1.2.0"
+            VALUE "InternalName", "RDT"
+            VALUE "LegalCopyright", "Copyright (C) 2023-2025 IDEA"
             VALUE "OriginalFilename", "qvgeapp.exe"
-            VALUE "ProductName", "Qt Visual Graph Editor"
-            VALUE "ProductVersion", "0.4.2.0"
+            VALUE "ProductName", "Road Design Tool"
+            VALUE "ProductVersion", "0.1.2.0"
         END
     END
     BLOCK "VarFileInfo"

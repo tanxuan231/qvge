@@ -15,7 +15,6 @@ It can be used freely, maintaining the information above.
 #include <qvge/CNodeEditorScene.h>
 #include <qvge/CEditorSceneDefines.h>
 #include <qvge/CEditorView.h>
-#include <qvge/ISceneItemFactory.h>
 
 #include <QApplication>
 #include <QMenuBar>
@@ -68,10 +67,10 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
 void qvgeNodeEditorUIController::createMenus()
 {
 	// file actions
-	QAction *exportAction = m_parent->getFileExportAction();
-	exportAction->setVisible(true);
-	exportAction->setText(tr("Export to &Image..."));
-	connect(exportAction, &QAction::triggered, this, &qvgeNodeEditorUIController::exportFile);
+//	QAction *exportAction = m_parent->getFileExportAction();
+//	exportAction->setVisible(true);
+//	exportAction->setText(tr("Export to &Image..."));
+//	connect(exportAction, &QAction::triggered, this, &qvgeNodeEditorUIController::exportFile);
 
 	// add edit menu
 	QMenu *editMenu = new QMenu(tr("&Edit"));
@@ -194,25 +193,25 @@ void qvgeNodeEditorUIController::createMenus()
 	QMenu *viewMenu = new QMenu(tr("&View"));
 	m_parent->menuBar()->insertMenu(m_parent->getWindowMenuAction(), viewMenu);
 
-    gridAction = viewMenu->addAction(QIcon(":/Icons/Grid-Show"), tr("Show &Grid"));
-	gridAction->setCheckable(true);
-	gridAction->setStatusTip(tr("Show/hide background grid"));
-	gridAction->setChecked(m_editorScene->gridEnabled());
-	connect(gridAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGrid(bool)));
+//    gridAction = viewMenu->addAction(QIcon(":/Icons/Grid-Show"), tr("Show &Grid"));
+//	gridAction->setCheckable(true);
+//	gridAction->setStatusTip(tr("Show/hide background grid"));
+//	gridAction->setChecked(m_editorScene->gridEnabled());
+//	connect(gridAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGrid(bool)));
 
-    gridSnapAction = viewMenu->addAction(QIcon(":/Icons/Grid-Snap"), tr("&Snap to Grid"));
-	gridSnapAction->setCheckable(true);
-	gridSnapAction->setStatusTip(tr("Snap to grid when dragging"));
-	gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
-	connect(gridSnapAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGridSnap(bool)));
+//    gridSnapAction = viewMenu->addAction(QIcon(":/Icons/Grid-Snap"), tr("&Snap to Grid"));
+//	gridSnapAction->setCheckable(true);
+//	gridSnapAction->setStatusTip(tr("Snap to grid when dragging"));
+//	gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
+//	connect(gridSnapAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGridSnap(bool)));
 
-    actionShowLabels = viewMenu->addAction(QIcon(":/Icons/Label"), tr("Show &Labels"));
-	actionShowLabels->setCheckable(true);
-	actionShowLabels->setStatusTip(tr("Show/hide item labels"));
-	actionShowLabels->setChecked(m_editorScene->itemLabelsEnabled());
-	connect(actionShowLabels, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableItemLabels(bool)));
+//    actionShowLabels = viewMenu->addAction(QIcon(":/Icons/Label"), tr("Show &Labels"));
+//	actionShowLabels->setCheckable(true);
+//	actionShowLabels->setStatusTip(tr("Show/hide item labels"));
+//	actionShowLabels->setChecked(m_editorScene->itemLabelsEnabled());
+//	connect(actionShowLabels, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableItemLabels(bool)));
 
-	viewMenu->addSeparator();
+//	viewMenu->addSeparator();
 
 	zoomAction = viewMenu->addAction(QIcon(":/Icons/ZoomIn"), tr("&Zoom"));
 	zoomAction->setStatusTip(tr("Zoom view in"));
@@ -399,34 +398,6 @@ void qvgeNodeEditorUIController::doWriteSettings(QSettings& settings)
 	settings.setValue("lastExportPath", m_lastExportPath);
 	settings.setValue("autoCreateGraphDialog", m_showNewGraphDialog );
 }
-
-
-class CDPSEReader : public ISceneItemFactory
-{
-public:
-	virtual CItem* createItemOfType(const QByteArray& typeId, const CEditorScene& scene) const
-	{
-		if (typeId == "CBranchNode")
-		{
-			auto node = scene.createItemOfType("CNode");
-			return node;
-		}
-
-		if (typeId == "CFanNode")
-		{
-			auto node = scene.createItemOfType("CNode");
-			return node;
-		}
-
-		if (typeId == "CBranchConnection")
-		{
-			auto edge = scene.createItemOfType("CDirectConnection");
-			return edge;
-		}
-
-		return NULL;
-	}
-};
 
 void qvgeNodeEditorUIController::onNewDocumentCreated()
 {

@@ -10,9 +10,8 @@ It can be used freely, maintaining the information above.
 #ifndef QVGEMAINWINDOW_H
 #define QVGEMAINWINDOW_H
 
-#include <QPlainTextEdit>
 #include <QStatusBar>
-
+#include <QByteArray>
 #include <base/CMainWindow.h>
 
 
@@ -44,8 +43,6 @@ protected:
 	
 private:
 	qvgeNodeEditorUIController *m_graphEditController = NULL;
-
-    QPlainTextEdit *m_textEditor = NULL;
 };
 
 #endif // QVGEMAINWINDOW_H

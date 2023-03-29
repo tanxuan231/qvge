@@ -16,7 +16,6 @@ It can be used freely, maintaining the information above.
 #include <QStyleOptionGraphicsItem>
 
 #include "CEditorScene.h"
-#include "Properties.h"
 #include "CUtils.h"
 
 
@@ -46,10 +45,6 @@ enum ItemDragTestResult
 	Accepted,
 	Ignored
 };
-
-
-class CControlPoint;
-
 
 class Stub
 {
@@ -135,10 +130,6 @@ public:
 	virtual void onClick(QGraphicsSceneMouseEvent* /*mouseEvent*/) {}
 	virtual bool onClickDrag(QGraphicsSceneMouseEvent* /*mouseEvent*/, const QPointF& /*clickPos*/) { return true; }
 	virtual bool onDoubleClickDrag(QGraphicsSceneMouseEvent* /*mouseEvent*/, const QPointF& /*clickPos*/) { return false; }
-
-	// call from control points
-	virtual void onControlPointMoved(CControlPoint* /*controlPoint*/, const QPointF& /*pos*/) {}
-	virtual void onControlPointDelete(CControlPoint* /*controlPoint*/) {}
 
 	// call from drag event
 	virtual ItemDragTestResult acceptDragFromItem(QGraphicsItem* /*draggedItem*/) { return Accepted; }
