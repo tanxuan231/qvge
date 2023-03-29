@@ -30,6 +30,7 @@ RESOURCES += $$files($$PWD/*.qrc)
 
 # base sources
 include($$PWD/../base/base.pri)
+include($$PWD/../qvge/qvge.pri)
 
 # includes & libs
 INCLUDEPATH += $$PWD $$PWD/..
