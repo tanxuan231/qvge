@@ -523,20 +523,6 @@ bool CMainWindow::saveAs()
 
 bool CMainWindow::doSaveDocument(const QString &fileName, const QString &selectedFilter, const QByteArray &docType)
 {
-    if (saveDocument(fileName, selectedFilter, docType))
-    {
-        m_currentFileName = fileName;
-        m_isChanged = false;
-        m_lastSaveFilter = selectedFilter;
-		m_lastPath = QFileInfo(m_currentFileName).absolutePath();
-
-        statusBar()->showMessage(tr("Document saved successfully."));
-
-		onCurrentFileChanged();
-
-		return true;
-    }
-    else
     {
         QMessageBox::critical(NULL, tr("Save Error"), tr("Document cannot be saved. Check access rights and path."));
     }

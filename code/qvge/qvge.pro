@@ -8,7 +8,7 @@ else{
 }
 
 TARGET = qvge
-QT += core gui widgets printsupport xml
+QT += core gui widgets
 
 SOURCES += $$files($$PWD/*.cpp)
 HEADERS += $$files($$PWD/*.h)

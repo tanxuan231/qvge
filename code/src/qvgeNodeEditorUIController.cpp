@@ -12,15 +12,9 @@ It can be used freely, maintaining the information above.
 
 #include <qvge/CNode.h>
 #include <qvge/CConnection.h>
-#include <qvge/CImageExport.h>
-#include <qvge/CPDFExport.h>
 #include <qvge/CNodeEditorScene.h>
 #include <qvge/CEditorSceneDefines.h>
 #include <qvge/CEditorView.h>
-#include <qvge/CFileSerializerGEXF.h>
-#include <qvge/CFileSerializerGraphML.h>
-#include <qvge/CFileSerializerXGR.h>
-#include <qvge/CFileSerializerDOT.h>
 #include <qvge/ISceneItemFactory.h>
 
 #include <QApplication>
@@ -78,17 +72,6 @@ void qvgeNodeEditorUIController::createMenus()
 	exportAction->setVisible(true);
 	exportAction->setText(tr("Export to &Image..."));
 	connect(exportAction, &QAction::triggered, this, &qvgeNodeEditorUIController::exportFile);
-
-	QAction *exportActionPDF = new QAction(tr("Export to &PDF..."));
-	m_parent->getFileMenu()->insertAction(exportAction, exportActionPDF);
-	connect(exportActionPDF, &QAction::triggered, this, &qvgeNodeEditorUIController::exportPDF);
-
-	QAction *exportActionDOT = new QAction(tr("Export to &DOT/GraphViz..."));
-	m_parent->getFileMenu()->insertAction(exportActionPDF, exportActionDOT);
-	connect(exportActionDOT, &QAction::triggered, this, &qvgeNodeEditorUIController::exportDOT);
-
-	m_parent->getFileMenu()->insertSeparator(exportActionDOT);
-
 
 	// add edit menu
 	QMenu *editMenu = new QMenu(tr("&Edit"));
@@ -386,56 +369,9 @@ void qvgeNodeEditorUIController::onEditModeChanged(int mode)
 		modeDefaultAction->setChecked(true);
 }
 
-
-bool qvgeNodeEditorUIController::doExport(const IFileSerializer &exporter)
-{
-	QString fileName = CUtils::cutLastSuffix(m_parent->getCurrentFileName());
-	if (fileName.isEmpty())
-		fileName = m_lastExportPath;
-	else
-		fileName = QFileInfo(m_lastExportPath).absolutePath() + "/" + QFileInfo(fileName).fileName();
-
-	QString path = QFileDialog::getSaveFileName(NULL,
-		QObject::tr("Export as") + " " + exporter.description(),
-		fileName,
-		exporter.filters()
-	);
-
-	if (path.isEmpty())
-		return false;
-
-	m_lastExportPath = path;
-
-	if (exporter.save(path, *m_editorScene))
-	{
-		m_parent->statusBar()->showMessage(tr("Export successful (%1)").arg(path));
-		return true;
-	}
-	else
-	{
-		m_parent->statusBar()->showMessage(tr("Export failed (%1)").arg(path));
-		return false;
-	}
-}
-
-
 void qvgeNodeEditorUIController::exportFile()
 {
-	doExport(CImageExport());
 }
-
-
-void qvgeNodeEditorUIController::exportDOT()
-{
-	doExport(CFileSerializerDOT());
-}
-
-
-void qvgeNodeEditorUIController::exportPDF()
-{
-	doExport(CPDFExport());
-}
-
 
 void qvgeNodeEditorUIController::doReadSettings(QSettings& settings)
 {
@@ -451,7 +387,6 @@ void qvgeNodeEditorUIController::doReadSettings(QSettings& settings)
 	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
 	m_showNewGraphDialog  = settings.value("autoCreateGraphDialog", m_showNewGraphDialog ).toBool();
 }
-
 
 void qvgeNodeEditorUIController::doWriteSettings(QSettings& settings)
 {
@@ -492,47 +427,6 @@ public:
 		return NULL;
 	}
 };
-
-
-bool qvgeNodeEditorUIController::loadFromFile(const QString &fileName, const QString &format)
-{
-    if (format == "xgr")
-    {
-		static CDPSEReader tmp;
-		m_editorScene->setItemFactoryFilter(&tmp);
-        return (CFileSerializerXGR().load(fileName, *m_editorScene));
-    }
-
-	if (format == "graphml")
-	{
-        return (CFileSerializerGraphML().load(fileName, *m_editorScene));
-	}
-
-	if (format == "gexf")
-	{
-        return (CFileSerializerGEXF().load(fileName, *m_editorScene));
-	}
-
-    // else via ogdf
-    return false;
-//    return (COGDFLayout::loadGraph(fileName.toStdString(), *m_editorScene));
-}
-
-
-bool qvgeNodeEditorUIController::saveToFile(const QString &fileName, const QString &format)
-{
-    if (format == "xgr")
-        return (CFileSerializerXGR().save(fileName, *m_editorScene));
-
-    if (format == "dot")
-        return (CFileSerializerDOT().save(fileName, *m_editorScene));
-
-	if (format == "gexf")
-		return (CFileSerializerGEXF().save(fileName, *m_editorScene));
-
-    return false;
-}
-
 
 void qvgeNodeEditorUIController::onNewDocumentCreated()
 {

@@ -13,7 +13,6 @@ It can be used freely, maintaining the information above.
 #include <QLabel>
 #include <QSettings>
 
-#include <slider2d.h>
 
 class qvgeMainWindow;
 
@@ -33,16 +32,10 @@ public:
 	void doReadSettings(QSettings& settings);
 	void doWriteSettings(QSettings& settings);
 
-	bool loadFromFile(const QString &fileName, const QString &format);
-	bool saveToFile(const QString &fileName, const QString &format);
-
     void onNewDocumentCreated();
 
-private Q_SLOTS:
-	bool doExport(const IFileSerializer &exporter);
+private Q_SLOTS:	
 	void exportFile();
-	void exportPDF();
-	void exportDOT();
 
 	void onSelectionChanged();
     void onSceneChanged();

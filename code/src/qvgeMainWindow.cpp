@@ -16,17 +16,10 @@ It can be used freely, maintaining the information above.
 #include <QApplication>
 #include <QFileInfo>
 
-#include <base/CPlatformServices.h>
-
-
 qvgeMainWindow::qvgeMainWindow()
 {
-	QString bitString;
-	int bits = CPlatformServices::GetPlatformBits();
-	if (bits > 0) bitString = QString(" %1bit").arg(bits);
-
     QApplication::setApplicationName("Qt Visual Graph Editor");
-    QApplication::setApplicationVersion(qvgeVersion.toString() + tr(" (Beta)") + bitString);
+    QApplication::setApplicationVersion(qvgeVersion.toString() + tr(" (Beta)"));
 
 	CDocumentFormat gexf = { "GEXF", "*.gexf", {"gexf"}, true, true };
 	CDocumentFormat graphml = { "GraphML", "*.graphml", {"graphml"}, false, true };
@@ -103,7 +96,7 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 	{
 		docType = "graph";
 
-        if (createDocument(docType) && m_graphEditController->loadFromFile(fileName, format))
+        if (createDocument(docType))
 		{
 			return true;
 		}
@@ -131,36 +124,6 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 
     return false;
 }
-
-
-bool qvgeMainWindow::saveDocument(const QString &fileName, const QString &/*selectedFilter*/, const QByteArray &docType)
-{
-    // text
-    if (docType == "text")
-    {
-        QFile f(fileName);
-        if (f.open(QFile::WriteOnly))
-        {
-            QTextStream ts(&f);
-            ts << m_textEditor->toPlainText();
-            f.close();
-            return true;
-        }
-        return false;
-    }
-
-    // graph
-	if (docType == "graph")
-	{
-		QString extType = QFileInfo(fileName).suffix().toLower();
-
-        return m_graphEditController->saveToFile(fileName, extType);
-	}
-
-    // unknown type
-    return false;
-}
-
 
 QString qvgeMainWindow::getAboutText() const
 {

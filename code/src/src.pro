@@ -19,7 +19,7 @@ else{
         LIBS += -L$$OUT_PWD/../lib
 }
 
-QT += core gui widgets xml opengl network printsupport
+QT += core gui widgets xml opengl network
 CONFIG += c++11
 
 # app sources
@@ -30,24 +30,16 @@ RESOURCES += $$files($$PWD/*.qrc)
 
 # base sources
 include($$PWD/../base/base.pri)
-#include($$PWD/../qvge/qvge.pri)
 
 # includes & libs
-INCLUDEPATH += $$PWD $$PWD/.. $$PWD/../3rdParty/qsint-widgets $$PWD/../3rdParty/qtpropertybrowser $$PWD/../3rdParty/ogdf/include
-
-#LIBS += -logdf -lqtpropertybrowser -lqsint-widgets -lqvge
+INCLUDEPATH += $$PWD $$PWD/..
 LIBS += -lqvge
 
 win32{
-    LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
+    LIBS += -lopengl32 -luser32
 
     RC_FILE = $$PWD/../win32/icon.rc
 }
-
-cygwin*{
-    LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
-}
-
 
 # compiler stuff
 win32-msvc*{
