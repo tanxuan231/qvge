@@ -36,7 +36,7 @@ include($$PWD/../base/base.pri)
 INCLUDEPATH += $$PWD $$PWD/.. $$PWD/../3rdParty/qsint-widgets $$PWD/../3rdParty/qtpropertybrowser $$PWD/../3rdParty/ogdf/include
 
 #LIBS += -logdf -lqtpropertybrowser -lqsint-widgets -lqvge
-LIBS += -lqsint-widgets -lqvge
+LIBS += -lqvge
 
 win32{
     LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi

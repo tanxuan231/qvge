@@ -56,9 +56,6 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
 	// connect view
 	connect(m_editorView, SIGNAL(scaleChanged(double)), this, SLOT(onZoomChanged(double)));
 
-    // slider2d
-    createNavigator();
-
 	// menus & actions
 	createMenus();
 
@@ -268,49 +265,6 @@ void qvgeNodeEditorUIController::createMenus()
 	zoomToolbar->addAction(unzoomAction);
 	zoomToolbar->addAction(fitZoomAction);
 }
-
-void qvgeNodeEditorUIController::createNavigator()
-{
-    m_sliderView = new QSint::Slider2d(m_parent);
-    m_sliderView->connectSource(m_editorView);
-
-    QToolButton *sliderButton = m_sliderView->makeAsButton();
-    m_editorView->setCornerWidget(sliderButton);
-
-	sliderButton->setIcon(QIcon(":/Icons/Navigator"));
-    sliderButton->setToolTip(tr("Show scene navigator"));
-    connect(m_sliderView, SIGNAL(aboutToShow()), this, SLOT(onNavigatorShown()));
-
-    m_sliderView->setFixedSize(200,200);
-    m_sliderView->setSliderOpacity(0.3);
-    m_sliderView->setSliderBrush(Qt::green);
-}
-
-
-void qvgeNodeEditorUIController::onNavigatorShown()
-{
-    double w = m_editorScene->sceneRect().width();
-    double h = m_editorScene->sceneRect().height();
-    double cw = w > h ? 200.0 : 200.0 * (w/h);
-    double ch = h > w ? 200.0 : 200.0 * (h/w) ;
-    m_sliderView->setFixedSize(cw, ch);
-
-    // Qt bug: update menu size
-    QResizeEvent re(m_sliderView->size(), m_sliderView->parentWidget()->size());
-    qApp->sendEvent(m_sliderView->parentWidget(), &re);
-
-    QPixmap pm(m_sliderView->size());
-    QPainter p(&pm);
-	bool gridOn = m_editorScene->gridEnabled();
-	bool labelsOn = m_editorScene->itemLabelsEnabled();
-	m_editorScene->enableGrid(false);
-	m_editorScene->enableItemLabels(false);
-    m_editorScene->render(&p);
-	m_editorScene->enableGrid(gridOn);
-	m_editorScene->enableItemLabels(labelsOn);
-    m_sliderView->setBackgroundBrush(pm);
-}
-
 
 qvgeNodeEditorUIController::~qvgeNodeEditorUIController() 
 {

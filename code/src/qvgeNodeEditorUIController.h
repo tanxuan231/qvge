@@ -59,18 +59,13 @@ private Q_SLOTS:
 	void sceneCrop();
     void sceneOptions();
 
-    void onNavigatorShown();
-
 private:
 	void createMenus();
-    void createNavigator();
 
 private:
 	qvgeMainWindow *m_parent;
 	CNodeEditorScene *m_editorScene;
 	CEditorView *m_editorView;
-
-    class QSint::Slider2d *m_sliderView;
 
     QLabel *m_statusLabel;
 

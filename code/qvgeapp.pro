@@ -9,12 +9,6 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-#SUBDIRS += qtpropertybrowser
-#qtpropertybrowser.file = $$PWD/3rdParty/qtpropertybrowser/qtpropertybrowser.pro
-
-SUBDIRS += qsint
-qsint.file = $$PWD/3rdParty/qsint-widgets/qsint-widgets.pro
-
 SUBDIRS += qvge
 qvge.file = $$PWD/qvge/qvge.pro
 
