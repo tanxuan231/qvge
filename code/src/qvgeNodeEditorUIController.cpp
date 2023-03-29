@@ -9,9 +9,7 @@ It can be used freely, maintaining the information above.
 
 #include <qvgeNodeEditorUIController.h>
 #include <qvgeMainWindow.h>
-#include <CSceneOptionsDialog.h>
 #include <COGDFLayoutUIController.h>
-#include <COGDFNewGraphDialog.h>
 #include <COGDFLayout.h>
 
 #include <qvge/CNode.h>
@@ -190,11 +188,6 @@ void qvgeNodeEditorUIController::createMenus()
 
 	// scene options
 	editMenu->addSeparator();
-
-	QAction *sceneAction = editMenu->addAction(QIcon(":/Icons/Settings"), tr("&Options..."));
-	sceneAction->setStatusTip(tr("Set up the scene"));
-	connect(sceneAction, &QAction::triggered, this, &qvgeNodeEditorUIController::sceneOptions);
-
 
 	// add edit toolbar
 	QToolBar *editToolbar = m_parent->addToolBar(tr("Edit"));
@@ -413,19 +406,19 @@ void qvgeNodeEditorUIController::sceneCrop()
 
 void qvgeNodeEditorUIController::sceneOptions()
 {
-    CSceneOptionsDialog dialog;
-	dialog.setShowNewGraphDialog(m_showNewGraphDialog);
+//    CSceneOptionsDialog dialog;
+//	dialog.setShowNewGraphDialog(m_showNewGraphDialog);
 
-    if (dialog.exec(*m_editorScene, *m_editorView))
-    {
-        gridAction->setChecked(m_editorScene->gridEnabled());
-        gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
-        actionShowLabels->setChecked(m_editorScene->itemLabelsEnabled());
+//    if (dialog.exec(*m_editorScene, *m_editorView))
+//    {
+//        gridAction->setChecked(m_editorScene->gridEnabled());
+//        gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
+//        actionShowLabels->setChecked(m_editorScene->itemLabelsEnabled());
 
-		m_showNewGraphDialog  = dialog.isShowNewGraphDialog();
+//		m_showNewGraphDialog  = dialog.isShowNewGraphDialog();
 
-		m_parent->writeSettings();
-    }
+//		m_parent->writeSettings();
+//    }
 }
 
 
@@ -595,21 +588,4 @@ void qvgeNodeEditorUIController::onNewDocumentCreated()
 {
 	m_editorScene->setClassAttributeVisible("item", "id", true);
 	m_editorScene->setClassAttributeVisible("item", "label", true);
-
-	if (m_showNewGraphDialog )
-	{
-		COGDFNewGraphDialog dialog;
-		if (dialog.exec(*m_editorScene))
-		{
-			// update scene info
-			//onSceneChanged();
-		}
-
-		bool show = dialog.isShowOnStart();
-		if (show != m_showNewGraphDialog )
-		{
-			m_showNewGraphDialog  = show;
-			m_parent->writeSettings();
-		}
-	}
 }
