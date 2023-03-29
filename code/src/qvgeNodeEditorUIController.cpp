@@ -9,7 +9,6 @@ It can be used freely, maintaining the information above.
 
 #include <qvgeNodeEditorUIController.h>
 #include <qvgeMainWindow.h>
-#include <COGDFLayoutUIController.h>
 #include <COGDFLayout.h>
 
 #include <qvge/CNode.h>
@@ -73,9 +72,6 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
     onSelectionChanged();
     onZoomChanged(1);
 	onSceneStatusChanged(m_editorScene->getInfoStatus());
-
-    // OGDF
-    m_ogdfController = new COGDFLayoutUIController(parent, m_editorScene);
 }
 
 
