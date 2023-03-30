@@ -36,7 +36,6 @@ const char* versionId = "VersionId";
 
 
 CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent), 
-    m_doubleClick(false),
 	m_dragInProgress(false),
     m_startDragItem(NULL),
 	m_infoStatus(-1),
@@ -1164,18 +1163,6 @@ void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 	}
 }
 
-
-void CEditorScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-	Super::mouseDoubleClickEvent(mouseEvent);
-
-	if (mouseEvent->button() == Qt::LeftButton)
-	{
-		m_doubleClick = true;
-	}
-}
-
-
 void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	QGraphicsItem* prevGrabber = m_draggedItem;
@@ -1193,15 +1180,10 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		else if (m_leftClickPos == mouseEvent->scenePos())
 		{
 			QGraphicsItem *hoverItem = getItemAt(mouseEvent->scenePos());
-
-			if (m_doubleClick)
-				onLeftDoubleClick(mouseEvent, hoverItem);
-			else
-				onLeftClick(mouseEvent, hoverItem);
+            onLeftClick(mouseEvent, hoverItem);
 		}
 	}
 
-	m_doubleClick = false;
 	m_dragInProgress = false;
 }
 

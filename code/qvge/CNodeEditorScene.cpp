@@ -240,15 +240,6 @@ CConnection* CNodeEditorScene::createNewConnection() const
 
 
 // events
-
-void CNodeEditorScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-	//setSceneCursor(Qt::SizeAllCursor);
-
-	Super::mouseDoubleClickEvent(mouseEvent);
-}
-
-
 void CNodeEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	bool isDragging = (mouseEvent->buttons() & Qt::LeftButton);
@@ -391,37 +382,6 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 	// nothing to do
 	return false;
 }
-
-
-bool CNodeEditorScene::onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPointF &clickPos)
-{
-	// debug
-	if (clickPos == QPointF())
-		qDebug() << "bug";
-
-	// try to start new connection at click point
-	if (startNewConnection(clickPos))
-		return true;
-
-	// else handle by object under mouse
-	QGraphicsItem* item = getItemAt(clickPos);
-	if (item)
-	{
-		if (!item->isEnabled())
-			return false;
-
-		if (!item->flags() & item->ItemIsMovable)
-			return false;
-
-		CItem *citem = dynamic_cast<CItem*>(item);
-		if (citem)
-			return citem->onDoubleClickDrag(mouseEvent, clickPos);
-	}
-
-	// nothing to do
-	return false;
-}
-
 
 void CNodeEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* dragItem)
 {

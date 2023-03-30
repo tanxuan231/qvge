@@ -226,7 +226,7 @@ protected:
 	virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
-	virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
+
 	virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent);
 	virtual void keyPressEvent(QKeyEvent *keyEvent);
 	virtual void keyReleaseEvent(QKeyEvent *keyEvent);
@@ -256,8 +256,7 @@ private:
 
 protected:
 	QPointF m_leftClickPos;
-	QPointF m_mousePos;
-	bool m_doubleClick;
+	QPointF m_mousePos;	
 	bool m_dragInProgress;
 	QGraphicsItem *m_startDragItem;
 	QPointF m_lastDragPos;
