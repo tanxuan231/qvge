@@ -61,6 +61,11 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
     onSelectionChanged();
     onZoomChanged(1);
 	onSceneStatusChanged(m_editorScene->getInfoStatus());
+
+
+    auto start = m_editorScene->AddNewNode(QPointF(100, 100));
+    auto end = m_editorScene->AddNewNode(QPointF(50, 200));
+    m_editorScene->AddNewConnection(start, end);
 }
 
 

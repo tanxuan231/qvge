@@ -154,16 +154,12 @@ bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 	m_endNode = dynamic_cast<CNode*>(m_startNode->clone());
 	Super::startDrag(m_endNode);
 
-	m_connection = createNewConnection();
-	addItem(m_connection);
-	m_connection->setFirstNode(m_startNode);
-	m_connection->setLastNode(m_endNode);
+    AddNewConnection(m_startNode, m_endNode);
 
 	m_state = IS_Creating;
 
     // auto select created items
     m_startNode->setSelected(false);
-    //m_connection->setSelected(true);
     m_endNode->setSelected(true);
 
 	return true;
@@ -445,29 +441,33 @@ void CNodeEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphi
 		if (!clickedItem)
 		{
 //			setEditMode(EM_Default);
-			onLeftDoubleClick(mouseEvent, clickedItem);
+            AddNewNode(mouseEvent->scenePos(), true);
 			return;
 		}
 	}
 }
 
 
-void CNodeEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem)
+CNode* CNodeEditorScene::AddNewNode(const QPointF& point, bool selected)
 {
-	// clicked on empty space?
-	if (!clickedItem)
-	{
-		// create a node here
-		auto node = createNewNode();
-		addItem(node);
-		node->setPos(getSnapped(mouseEvent->scenePos()));
-		node->setSelected(true);
+    // create a node here
+    auto node = createNewNode();
+    addItem(node);
+    node->setPos(getSnapped(point));
+    node->setSelected(selected);
 
-		addUndoState();
-		return;
-	}
+    addUndoState();
+
+    return node;
 }
 
+void CNodeEditorScene::AddNewConnection(CNode *start, CNode *end)
+{
+    m_connection = createNewConnection();
+    addItem(m_connection);
+    m_connection->setFirstNode(start);
+    m_connection->setLastNode(end);
+}
 
 // movement
 

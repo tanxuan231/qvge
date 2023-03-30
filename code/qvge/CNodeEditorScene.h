@@ -73,6 +73,9 @@ public Q_SLOTS:
 
 	void setEditMode(EditMode mode);
 
+    virtual CNode* AddNewNode(const QPointF& point, bool selected = false);
+    virtual void AddNewConnection(CNode* start, CNode* end);
+
 protected:
 	void moveSelectedEdgesBy(const QPointF& d);
     void prefetchSelection();
@@ -86,8 +89,7 @@ protected:
 	virtual bool onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPointF &clickPos);
 
 	virtual void onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* dragItem);
-	virtual void onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem);
-	virtual void onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem);
+	virtual void onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem);    
 
 	// reimp
 	virtual bool populateMenu(QMenu& menu, QGraphicsItem* item, const QList<QGraphicsItem*>& selectedItems);

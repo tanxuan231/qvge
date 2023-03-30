@@ -1032,7 +1032,6 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     qDebug()<<__FUNCTION__<<" m_draggedItem: "<<m_draggedItem;
 	moveDrag(mouseEvent, m_draggedItem, false);
 
-
 	updateCursorState();
 }
 
@@ -1237,12 +1236,6 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 	m_dragInProgress = false;
 }
 
-
-void CEditorScene::updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
-{
-}
-
-
 void CEditorScene::onMoving(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
 {
 	updateCursorState();
@@ -1252,7 +1245,6 @@ void CEditorScene::onMoving(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 	else
 		setInfoStatus(SIS_Select);
 }
-
 
 void CEditorScene::onDragging(QGraphicsItem* /*dragItem*/, const QSet<CItem*>& acceptedItems, const QSet<CItem*>& rejectedItems)
 {
