@@ -449,8 +449,6 @@ void CNodeEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphi
 			return;
 		}
 	}
-
-	Super::onLeftClick(mouseEvent, clickedItem);
 }
 
 
@@ -468,8 +466,6 @@ void CNodeEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* mouseEvent, Q
 		addUndoState();
 		return;
 	}
-
-	Super::onLeftDoubleClick(mouseEvent, clickedItem);
 }
 
 
@@ -482,7 +478,7 @@ void CNodeEditorScene::moveSelectedEdgesBy(const QPointF& d)
 	{
 		QSet<CNode*> unselNodes;	// not selected nodes
 
-									// move selected edges
+        // move selected edges
 		for (auto edge : edges)
 		{
 			if (!edge->firstNode()->isSelected())

@@ -127,7 +127,6 @@ public:
 	virtual void onHoverLeave(QGraphicsItem* /*sceneItem*/, QGraphicsSceneHoverEvent* /*event*/) {}
 	virtual void onDraggedOver(const QSet<CItem*>& /*acceptedItems*/, const QSet<CItem*>& /*rejectedItems*/) {}
 	virtual void onDroppedOn(const QSet<CItem*>& /*acceptedItems*/, const QSet<CItem*>& /*rejectedItems*/) {}
-	virtual void onClick(QGraphicsSceneMouseEvent* /*mouseEvent*/) {}
 	virtual bool onClickDrag(QGraphicsSceneMouseEvent* /*mouseEvent*/, const QPointF& /*clickPos*/) { return true; }
 
 	// call from drag event

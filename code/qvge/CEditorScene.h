@@ -196,7 +196,6 @@ public Q_SLOTS:
 
 	void onActionDelete();
 	void onActionSelectAll();
-	void onActionEditLabel(CItem *item);
 
 	void selectAll();
 	void deselectAll();
@@ -247,7 +246,6 @@ protected:
 	virtual void onMoving(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* hoverItem);
 	virtual void onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* dragItem);
 	virtual void onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem);
-	virtual void onLeftDoubleClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem);
 	virtual void onSceneChanged();
 
 private:

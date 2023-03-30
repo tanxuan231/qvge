@@ -1278,41 +1278,11 @@ void CEditorScene::onDropped(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphics
 	}
 }
 
-
 void CEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem)
 {
-	if (CItem *item = dynamic_cast<CItem*>(clickedItem))
-	{
-		item->onClick(mouseEvent);
-	}
 }
-
-
-void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem)
-{
-	// clicked on empty space?
-	if (!clickedItem)
-	{
-		return;
-	}
-
-	// else check clicked item...
-	CItem *item = dynamic_cast<CItem*>(clickedItem);
-	if (!item) 
-	{
-		item = dynamic_cast<CItem*>(clickedItem->parentItem());	// if clicked on label
-	}
-
-	if (item)
-	{
-		onActionEditLabel(item);
-	}
-}
-
-
 
 // scene
-
 void CEditorScene::setInfoStatus(int status)
 {
 	if (m_infoStatus != status)
@@ -1592,25 +1562,6 @@ void CEditorScene::onActionSelectAll()
 {
 	selectAll();
 }
-
-
-void CEditorScene::onActionEditLabel(CItem *item)
-{
-	bool ok = false;
-
-	QString text = QInputDialog::getMultiLineText(NULL,
-		tr("Item Label"), tr("New label text:"),
-		item->getAttribute("label").toString(),
-		&ok);
-
-	if (ok)
-	{
-		item->setAttribute("label", text);
-
-		addUndoState();
-	}
-}
-
 
 // selections
 
