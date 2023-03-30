@@ -9,6 +9,7 @@ It can be used freely, maintaining the information above.
 
 #pragma once
 
+#include "base/ConfigFileOper.h"
 #include <QAction>
 #include <QLabel>
 #include <QSettings>
@@ -28,6 +29,14 @@ class qvgeNodeEditorUIController : public QObject
 public:
 	qvgeNodeEditorUIController(qvgeMainWindow *parent);
 	~qvgeNodeEditorUIController();
+
+    void LoadConfigure();
+    void LoadRoad(const EdgeInfo &edges,
+                  const NodeInfo &nodes,
+                  const NodeLabelInfo &labels);
+    void LoadClimbingSpace(const QList<QPolygonF>& polygons, const QPen& pen);
+    void LoadTuringSpace(const QList<QPolygonF>& polygons, const QPen& pen);
+    void LoadPolygon(const QList<QPolygonF>& polygons, const QPen& pen);
 
 	void doReadSettings(QSettings& settings);
 	void doWriteSettings(QSettings& settings);

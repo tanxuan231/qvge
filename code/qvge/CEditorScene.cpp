@@ -1029,8 +1029,8 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	m_mousePos = mouseEvent->scenePos();
 
     m_draggedItem = mouseGrabberItem(); // 获取当前拥有鼠标焦点的图形项
-    qDebug()<<__FUNCTION__<<" m_draggedItem: "<<m_draggedItem;
-	moveDrag(mouseEvent, m_draggedItem, false);
+//    qDebug()<<__FUNCTION__<<" m_draggedItem: "<<m_draggedItem;
+    moveDrag(mouseEvent, m_draggedItem, true);
 
 	updateCursorState();
 }
@@ -1046,6 +1046,7 @@ void CEditorScene::startDrag(QGraphicsItem* dragItem)
 
 void CEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem)
 {
+    qDebug()<<__FUNCTION__<<" m_startDragItem: "<<m_startDragItem;
 	if (m_startDragItem)
 	{
 		auto keys = qApp->queryKeyboardModifiers();
@@ -1086,7 +1087,6 @@ void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 	if (dragItem)
 	{
 		m_dragInProgress = true;
-
 		if (dragItem->flags() & dragItem->ItemIsMovable)
 		{
 			if (performDrag)
@@ -1096,8 +1096,9 @@ void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 
 			QSet<CItem*> oldHovers = m_acceptedHovers + m_rejectedHovers;
 
-            QList<QGraphicsItem*> hoveredItems = dragItem->collidingItems();    // 与当前图形项碰撞的所有图形项的列表
-            qDebug()<<"hoveredItems size: "<<hoveredItems.size();
+            // 与当前图形项碰撞的所有图形项的列表
+            QList<QGraphicsItem*> hoveredItems = dragItem->collidingItems();
+//            qDebug()<<"hoveredItems size: "<<hoveredItems.size();
 			for (int i = 0; i < hoveredItems.size(); ++i)
 			{
 				// dont drop on disabled
@@ -1307,15 +1308,6 @@ void CEditorScene::updateCursorState()
 			setSceneCursor(Qt::ForbiddenCursor);
 			return;
 		}
-
-		// clone?
-		//if (keys == Qt::ControlModifier)
-		//{
-		//	setSceneCursor(Qt::DragCopyCursor);
-		//	return;
-		//}
-
-        qDebug()<<__FUNCTION__<<" 1 Qt::SizeAllCursor";
 		setSceneCursor(Qt::SizeAllCursor);
 		return;
 	}
@@ -1334,7 +1326,6 @@ void CEditorScene::updateCursorState()
 
 			if (mouseButtons == Qt::NoButton)
 			{
-//                qDebug()<<__FUNCTION__<<" 2 Qt::SizeAllCursor";
 				setSceneCursor(Qt::SizeAllCursor);
 				return;
 			}

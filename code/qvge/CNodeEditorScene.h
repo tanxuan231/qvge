@@ -10,6 +10,7 @@ It can be used freely, maintaining the information above.
 #pragma once
 
 #include "CEditorScene.h"
+#include "base/ConfigFileOper.h"
 
 class CNode;
 class CConnection;
@@ -56,6 +57,10 @@ public:
     const QList<CNode*>& getSelectedNodes();
     const QList<CConnection*>& getSelectedEdges();
 
+    CNode* AddNewNode(const QPointF& point, bool selected = false, NodeLabel label = NodeLabel::Unknown);
+    void AddNewConnection(CNode* start, CNode* end);
+    void DrawFixPolygon(const QPolygonF& polygon, const QPen& pen);
+
 Q_SIGNALS:
 	void editModeChanged(int mode);
 
@@ -72,9 +77,6 @@ public Q_SLOTS:
     void onSceneOrSelectionChanged();
 
 	void setEditMode(EditMode mode);
-
-    virtual CNode* AddNewNode(const QPointF& point, bool selected = false);
-    virtual void AddNewConnection(CNode* start, CNode* end);
 
 protected:
 	void moveSelectedEdgesBy(const QPointF& d);

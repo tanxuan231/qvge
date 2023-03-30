@@ -28,6 +28,8 @@ It can be used freely, maintaining the information above.
 #include <QPixmapCache>
 #include <QFileDialog>
 
+#include <base/ConfigFileOper.h>
+
 
 qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
 	QObject(parent),
@@ -62,10 +64,7 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
     onZoomChanged(1);
 	onSceneStatusChanged(m_editorScene->getInfoStatus());
 
-
-    auto start = m_editorScene->AddNewNode(QPointF(100, 100));
-    auto end = m_editorScene->AddNewNode(QPointF(50, 200));
-    m_editorScene->AddNewConnection(start, end);
+    LoadConfigure();
 }
 
 
@@ -255,6 +254,97 @@ void qvgeNodeEditorUIController::createMenus()
 
 qvgeNodeEditorUIController::~qvgeNodeEditorUIController() 
 {
+}
+
+void qvgeNodeEditorUIController::LoadConfigure()
+{
+    ConfigReader configOper("input_test.json");
+//    auto start = m_editorScene->AddNewNode(QPointF(34851.644820002984, 224279.0145131051));
+//    auto end = m_editorScene->AddNewNode(QPointF(34834.01917591421, 224300.0427736337));
+//    m_editorScene->AddNewConnection(start, end);
+    LoadPolygon(configOper.GetBroders(), QPen(Qt::darkGray));
+    LoadPolygon(configOper.GetBuildings(), QPen(Qt::darkGray));
+    LoadPolygon(configOper.GetObstacles(), QPen(Qt::darkGray));
+
+    LoadTuringSpace(configOper.GetTurningSpace(), QPen(Qt::blue));
+//    LoadClimbingSpace(configOper.GetClimbings(), QPen(Qt::blue));
+
+    LoadRoad(configOper.GetRoadEdges(),
+             configOper.GetRoadNodes(),
+             configOper.GetRoadNodeLables());
+}
+
+void qvgeNodeEditorUIController::LoadRoad(const EdgeInfo &edges,
+                                          const NodeInfo &nodes,
+                                          const NodeLabelInfo &labels)
+{
+    assert(edges.size());
+
+    std::vector<CNode*> nodeItems;
+    for (int i = 0; i < nodes.size(); i++) {
+        auto node = nodes.at(i);
+        auto label = labels.at(i);
+        nodeItems.push_back(m_editorScene->AddNewNode(node, false, label));
+    }
+
+    for (auto edge : edges) {
+        m_editorScene->AddNewConnection(nodeItems[edge.first], nodeItems[edge.second]);
+    }
+}
+
+void qvgeNodeEditorUIController::LoadClimbingSpace(const QList<QPolygonF> &polygons, const QPen &pen)
+{
+    // 登高面需要close
+    for (auto polygon : polygons) {
+        if (polygon.empty()) {
+            assert(false);
+            continue;
+        }
+        CNode* firstNode = nullptr;
+        CNode* lastNode = nullptr;
+        CNode* curNode = nullptr;
+        for (auto point : polygon) {
+            auto node = m_editorScene->AddNewNode(point);
+            if (lastNode != nullptr) {
+                m_editorScene->AddNewConnection(lastNode, node);
+            }
+            if (firstNode == nullptr) {
+                firstNode = node;
+            }
+            lastNode = node;
+            curNode = node;
+        }
+        m_editorScene->AddNewConnection(curNode, firstNode);
+    }
+}
+
+void qvgeNodeEditorUIController::LoadTuringSpace(const QList<QPolygonF> &polygons, const QPen &pen)
+{
+    for (auto polygon : polygons) {
+        if (polygon.empty()) {
+            assert(false);
+            continue;
+        }
+        CNode* lastNode = nullptr;
+        for (auto point : polygon) {
+            auto node = m_editorScene->AddNewNode(point);
+            if (lastNode != nullptr) {
+                m_editorScene->AddNewConnection(lastNode, node);
+            }
+            lastNode = node;
+        }
+    }
+}
+
+void qvgeNodeEditorUIController::LoadPolygon(const QList<QPolygonF> &polygons, const QPen& pen)
+{
+    for (auto polygon : polygons) {
+        if (polygon.empty()) {
+            assert(false);
+            continue;
+        }
+        m_editorScene->DrawFixPolygon(polygon, pen);
+    }
 }
 
 

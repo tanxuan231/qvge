@@ -475,7 +475,7 @@ void CNode::onConnectionDeleted(CConnection *conn)
 
 void CNode::onItemMoved(const QPointF& /*delta*/)
 {
-    qDebug()<<__FUNCTION__<<" m_connections size: "<<m_connections.size();
+//    qDebug()<<__FUNCTION__<<" m_connections size: "<<m_connections.size();
 	for (CConnection *conn : m_connections)
 	{
 		conn->onNodeMoved(this); 

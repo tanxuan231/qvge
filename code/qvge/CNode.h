@@ -11,6 +11,7 @@ It can be used freely, maintaining the information above.
 #define CNODE_H
 
 #include "CItem.h"
+#include "base/ConfigFileOper.h"
 
 #include <QGraphicsEllipseItem>
 #include <QGraphicsRectItem>
@@ -38,6 +39,9 @@ public:
 	static QByteArray factoryId()		{ return "CNode"; }
 	virtual QByteArray typeId() const	{ return this->factoryId(); }
 	virtual QString createNewId() const;
+
+    void SetNodeLabel(NodeLabel label) { m_label = label; };
+    NodeLabel GetNodeLabel() { return m_label; }
 
 	int nodeFlags() const				{ return m_nodeFlags; }
 	void setNodeFlags(int f)			{ m_nodeFlags = f; }
@@ -122,6 +126,7 @@ private:
 protected:
 	QSet<CConnection*> m_connections;
 	int m_nodeFlags;
+    NodeLabel m_label{NodeLabel::Unknown};
 
 	QPolygonF m_shapeCache;
 	QRectF m_sizeCache;

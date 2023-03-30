@@ -54,11 +54,7 @@ void CNodeEditorScene::initialize()
     CAttribute shapeAttr("shape", "Shape", "disc");
 	setClassAttribute("node", shapeAttr);
 
-	//CAttribute sizeAttr("size", "Size", 11.0);
-	//setClassAttribute("node", sizeAttr);
-	//setClassAttributeConstrains("node", "size", new CDoubleConstrains(0.1, 1000.0));
-	//createClassAttribute("node", "size", "Size", 11.0, new CDoubleConstrains(0.1, 1000.0));
-	createClassAttribute("node", "size", "Size", QSizeF(11.0, 11.0));
+    createClassAttribute("node", "size", "Size", QSizeF(1.2, 1.2));
 
 	createClassAttribute("node", "stroke.style", "Stroke Style", "solid");
 	setClassAttributeConstrains("node", "stroke.style", edgeStyles);
@@ -70,7 +66,7 @@ void CNodeEditorScene::initialize()
 	setClassAttribute("node", posAttr);
 
 	// default edge attr
-    CAttribute edgeAttr("color", "Color", QColor(Qt::gray));
+    CAttribute edgeAttr("color", "Color", QColor(Qt::black));
 	setClassAttribute("edge", edgeAttr);
 
 	CAttribute directionAttr("direction", "Direction", "directed");
@@ -241,13 +237,13 @@ void CNodeEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	bool isDragging = (mouseEvent->buttons() & Qt::LeftButton);
 
 	// no double click and no drag
-    qDebug()<<__FUNCTION__<<" m_startDragItem: "<<m_startDragItem<<" isDragging: "<<isDragging;
+//    qDebug()<<__FUNCTION__<<" m_startDragItem: "<<m_startDragItem<<" isDragging: "<<isDragging;
 	if (m_startDragItem == NULL)
 	{
 		// moved after single click?
 		if (isDragging && onClickDrag(mouseEvent, m_leftClickPos))
 		{
-			moveDrag(mouseEvent, m_startDragItem, true);
+            moveDrag(mouseEvent, m_startDragItem, true);
 			return;
 		}
 
@@ -448,13 +444,14 @@ void CNodeEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphi
 }
 
 
-CNode* CNodeEditorScene::AddNewNode(const QPointF& point, bool selected)
+CNode* CNodeEditorScene::AddNewNode(const QPointF& point, bool selected, NodeLabel label)
 {
     // create a node here
     auto node = createNewNode();
     addItem(node);
     node->setPos(getSnapped(point));
     node->setSelected(selected);
+    node->SetNodeLabel(label);
 
     addUndoState();
 
@@ -467,6 +464,13 @@ void CNodeEditorScene::AddNewConnection(CNode *start, CNode *end)
     addItem(m_connection);
     m_connection->setFirstNode(start);
     m_connection->setLastNode(end);
+}
+
+void CNodeEditorScene::DrawFixPolygon(const QPolygonF& polygon, const QPen& pen)
+{
+    QGraphicsPolygonItem *polygonItem = new QGraphicsPolygonItem(polygon);
+    polygonItem->setPen(pen);
+    addItem(polygonItem);
 }
 
 // movement
@@ -518,12 +522,12 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 			items << item; 
 	}
 
-//    qDebug()<<"move items size: "<<items.size();
+    qDebug()<<"move items size: "<<items.size();
 	for (auto item : items)
 		item->moveBy(d.x(), d.y());
 
-//    for (auto edge : edges)
-//        edge->onItemMoved(d);   // 对于CConection来说，设置了ItemIsMovable，此处不需要执行
+    for (auto edge : edges)
+        edge->onItemMoved(d);   // 对于CConection来说，设置了ItemIsMovable，此处不需要执行
 }
 
 
