@@ -126,7 +126,7 @@ private:
 protected:
 	QSet<CConnection*> m_connections;
 	int m_nodeFlags;
-    NodeLabel m_label{NodeLabel::Unknown};
+    NodeLabel m_label{NodeLabel::FreePoint};
 
 	QPolygonF m_shapeCache;
 	QRectF m_sizeCache;

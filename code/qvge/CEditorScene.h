@@ -237,7 +237,7 @@ protected:
 
 	// call from reimp
 	void moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool performDrag);
-	virtual void processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem);
+    virtual void processDrag(QGraphicsSceneMouseEvent *mouseEvent);
 	void finishDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool dragCancelled);	
 
 	// callbacks

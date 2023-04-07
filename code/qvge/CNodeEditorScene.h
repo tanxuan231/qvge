@@ -57,9 +57,12 @@ public:
     const QList<CNode*>& getSelectedNodes();
     const QList<CConnection*>& getSelectedEdges();
 
-    CNode* AddNewNode(const QPointF& point, bool selected = false, NodeLabel label = NodeLabel::Unknown);
-    void AddNewConnection(CNode* start, CNode* end);
-    void DrawFixPolygon(const QPolygonF& polygon, const QPen& pen);
+    CNode* AddNewNode(const QPointF& point,
+                      bool selected = false,
+                      NodeLabel label = NodeLabel::FreePoint,
+                      bool unredo = true);
+    void AddNewConnection(CNode* start, CNode* end, bool unredo = true);
+    void DrawPolygon(const QPolygonF& polygon, const QPen& pen, bool isMovable = false);
 
 Q_SIGNALS:
 	void editModeChanged(int mode);
@@ -79,7 +82,6 @@ public Q_SLOTS:
 	void setEditMode(EditMode mode);
 
 protected:
-	void moveSelectedEdgesBy(const QPointF& d);
     void prefetchSelection();
 
 	// scene events
@@ -110,6 +112,7 @@ protected:
 	// creating
 	CNode *m_startNode, *m_endNode;
 	CConnection *m_connection;
+    std::vector<CConnection*> m_connections;
 	bool m_realStart;
 
 	enum InternState {

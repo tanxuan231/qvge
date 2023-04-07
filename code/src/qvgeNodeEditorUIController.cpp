@@ -267,7 +267,7 @@ void qvgeNodeEditorUIController::LoadConfigure()
     LoadPolygon(configOper.GetObstacles(), QPen(Qt::darkGray));
 
     LoadTuringSpace(configOper.GetTurningSpace(), QPen(Qt::blue));
-//    LoadClimbingSpace(configOper.GetClimbings(), QPen(Qt::blue));
+    LoadClimbingSpace(configOper.GetClimbings(), QPen(Qt::red));
 
     LoadRoad(configOper.GetRoadEdges(),
              configOper.GetRoadNodes(),
@@ -300,21 +300,7 @@ void qvgeNodeEditorUIController::LoadClimbingSpace(const QList<QPolygonF> &polyg
             assert(false);
             continue;
         }
-        CNode* firstNode = nullptr;
-        CNode* lastNode = nullptr;
-        CNode* curNode = nullptr;
-        for (auto point : polygon) {
-            auto node = m_editorScene->AddNewNode(point);
-            if (lastNode != nullptr) {
-                m_editorScene->AddNewConnection(lastNode, node);
-            }
-            if (firstNode == nullptr) {
-                firstNode = node;
-            }
-            lastNode = node;
-            curNode = node;
-        }
-        m_editorScene->AddNewConnection(curNode, firstNode);
+        m_editorScene->DrawPolygon(polygon, pen, true);
     }
 }
 
@@ -327,7 +313,7 @@ void qvgeNodeEditorUIController::LoadTuringSpace(const QList<QPolygonF> &polygon
         }
         CNode* lastNode = nullptr;
         for (auto point : polygon) {
-            auto node = m_editorScene->AddNewNode(point);
+            auto node = m_editorScene->AddNewNode(point, false, NodeLabel::Unknown, false);
             if (lastNode != nullptr) {
                 m_editorScene->AddNewConnection(lastNode, node);
             }
@@ -343,7 +329,7 @@ void qvgeNodeEditorUIController::LoadPolygon(const QList<QPolygonF> &polygons, c
             assert(false);
             continue;
         }
-        m_editorScene->DrawFixPolygon(polygon, pen);
+        m_editorScene->DrawPolygon(polygon, pen);
     }
 }
 

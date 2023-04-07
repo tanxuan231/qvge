@@ -1044,41 +1044,22 @@ void CEditorScene::startDrag(QGraphicsItem* dragItem)
 }
 
 
-void CEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem)
+void CEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    qDebug()<<__FUNCTION__<<" m_startDragItem: "<<m_startDragItem;
+    qDebug()<<__FUNCTION__<<" 1";
 	if (m_startDragItem)
 	{
-		auto keys = qApp->queryKeyboardModifiers();
-
-		if (keys & Qt::ShiftModifier)
-		{
-			auto hpos = mouseEvent->scenePos();
-			auto delta = hpos - m_leftClickPos;
-			if (qAbs(delta.x()) > qAbs(delta.y()))
-				hpos.setY(m_leftClickPos.y());
-			else
-				hpos.setX(m_leftClickPos.x());
-
-			QPointF d = hpos - m_lastDragPos;
-			m_lastDragPos = hpos;
-			moveSelectedItemsBy(d);
-		}
-		else
-		{
-			QPointF d = mouseEvent->scenePos() - m_lastDragPos;	// delta pos
-			m_lastDragPos = mouseEvent->scenePos();
-            moveSelectedItemsBy(d);
-		}
+        QPointF d = mouseEvent->scenePos() - m_lastDragPos;	// delta pos
+        m_lastDragPos = mouseEvent->scenePos();
+        moveSelectedItemsBy(d);
 
 		return;
 	}
 
 	// fallback
+    qDebug()<<__FUNCTION__<<" 2";
 	QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
 	moveSelectedItemsBy(d);
-
-	//dragItem->setPos(mouseEvent->scenePos());
 }
 
 
@@ -1091,7 +1072,7 @@ void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 		{
 			if (performDrag)
 			{
-				processDrag(mouseEvent, dragItem);		
+                processDrag(mouseEvent);
 			}
 
 			QSet<CItem*> oldHovers = m_acceptedHovers + m_rejectedHovers;
@@ -1370,8 +1351,11 @@ QGraphicsItem* CEditorScene::getItemAt(const QPointF& pos) const
 	// if label: return parent insteam
 	if (dynamic_cast<QGraphicsSimpleTextItem*>(hoverItem) != NULL)
 	{
+        assert(false);
 		return hoverItem->parentItem();
-	}
+    } else if (dynamic_cast<QGraphicsPolygonItem*>(hoverItem) != NULL) {
+        return nullptr;
+    }
 	else
 		return hoverItem;
 }

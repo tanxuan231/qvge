@@ -10,6 +10,38 @@
 #include <QDebug>
 #include <QElapsedTimer>
 
+class MyPolygonItem : public QGraphicsPolygonItem
+{
+public:
+    MyPolygonItem(const QPolygonF &polygon, QGraphicsItem *parent = nullptr)
+    {
+        setFlag(QGraphicsItem::ItemIsMovable, true); // 允许该QGraphicsPolygonItem对象可移动
+        setFlag(QGraphicsItem::ItemIsSelectable, true); // 允许该QGraphicsPolygonItem对象可选择
+        setFlag(QGraphicsItem::ItemSendsGeometryChanges, true); // 允许该QGraphicsPolygonItem对象发出几何变化信号
+    }
+    MyPolygonItem(QGraphicsItem* parent = nullptr) : QGraphicsPolygonItem(parent)
+    {
+        setFlag(QGraphicsItem::ItemIsMovable, true); // 允许该QGraphicsPolygonItem对象可移动
+        setFlag(QGraphicsItem::ItemIsSelectable, true); // 允许该QGraphicsPolygonItem对象可选择
+        setFlag(QGraphicsItem::ItemSendsGeometryChanges, true); // 允许该QGraphicsPolygonItem对象发出几何变化信号
+    }
+
+    QVariant itemChange(GraphicsItemChange change, const QVariant& value) override
+    {
+        if (change == QGraphicsItem::ItemPositionChange && scene()) {
+            QPointF newPos = value.toPointF();
+            QRectF sceneRect = scene()->sceneRect();
+            if (!sceneRect.contains(newPos)) {
+                // 限制QGraphicsPolygonItem对象的移动范围
+                newPos.setX(qMin(sceneRect.right(), qMax(newPos.x(), sceneRect.left())));
+                newPos.setY(qMin(sceneRect.bottom(), qMax(newPos.y(), sceneRect.top())));
+                return newPos;
+            }
+        }
+        return QGraphicsItem::itemChange(change, value);
+    }
+};
+
 
 CNodeEditorScene::CNodeEditorScene(QObject *parent) : Super(parent),
 	m_editMode(EM_Default),
@@ -237,7 +269,7 @@ void CNodeEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	bool isDragging = (mouseEvent->buttons() & Qt::LeftButton);
 
 	// no double click and no drag
-//    qDebug()<<__FUNCTION__<<" m_startDragItem: "<<m_startDragItem<<" isDragging: "<<isDragging;
+    qDebug()<<__FUNCTION__<<" m_startDragItem: "<<m_startDragItem<<" isDragging: "<<isDragging;
 	if (m_startDragItem == NULL)
 	{
 		// moved after single click?
@@ -444,7 +476,7 @@ void CNodeEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphi
 }
 
 
-CNode* CNodeEditorScene::AddNewNode(const QPointF& point, bool selected, NodeLabel label)
+CNode* CNodeEditorScene::AddNewNode(const QPointF& point, bool selected, NodeLabel label, bool unredo)
 {
     // create a node here
     auto node = createNewNode();
@@ -453,12 +485,14 @@ CNode* CNodeEditorScene::AddNewNode(const QPointF& point, bool selected, NodeLab
     node->setSelected(selected);
     node->SetNodeLabel(label);
 
-    addUndoState();
+    if (unredo) {
+        addUndoState();
+    }
 
     return node;
 }
 
-void CNodeEditorScene::AddNewConnection(CNode *start, CNode *end)
+void CNodeEditorScene::AddNewConnection(CNode *start, CNode *end, bool unredo)
 {
     m_connection = createNewConnection();
     addItem(m_connection);
@@ -466,45 +500,19 @@ void CNodeEditorScene::AddNewConnection(CNode *start, CNode *end)
     m_connection->setLastNode(end);
 }
 
-void CNodeEditorScene::DrawFixPolygon(const QPolygonF& polygon, const QPen& pen)
+void CNodeEditorScene::DrawPolygon(const QPolygonF& polygon, const QPen& pen, bool isMovable)
 {
     QGraphicsPolygonItem *polygonItem = new QGraphicsPolygonItem(polygon);
+    if (isMovable) {
+        polygonItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+        polygonItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    }
     polygonItem->setPen(pen);
     addItem(polygonItem);
 }
 
 // movement
-
-void CNodeEditorScene::moveSelectedEdgesBy(const QPointF& d)
-{
-	QList<CConnection*> edges = getSelectedItems<CConnection>();
-	if (edges.size())
-	{
-		QSet<CNode*> unselNodes;	// not selected nodes
-
-        // move selected edges
-		for (auto edge : edges)
-		{
-			if (!edge->firstNode()->isSelected())
-				unselNodes << edge->firstNode();
-
-			if (!edge->lastNode()->isSelected())
-				unselNodes << edge->lastNode();
-
-			edge->onItemMoved(d);
-		}
-
-		// force move non selected nodes of the selected edges
-		for (auto node : unselNodes)
-		{
-			node->moveBy(d.x(), d.y());
-		}
-	}
-}
-
-
 // reimp
-
 void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 {
 	QSet<QGraphicsItem*> items;
@@ -522,7 +530,7 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 			items << item; 
 	}
 
-    qDebug()<<"move items size: "<<items.size();
+//    qDebug()<<"move items size: "<<items.size();
 	for (auto item : items)
 		item->moveBy(d.x(), d.y());
 

@@ -16,7 +16,7 @@
 enum class NodeLabel {
     // 0 出入口；1 自由端点；2 发生延拓碰到shell的端点；3 发生延拓碰到建筑/障碍物的端点；4 交点；5 拐点
     Unknown = -1,
-    Entrance,
+    Entrance = 0,
     FreePoint,
     TouchShellPoint,
     TouchObstaclePoint,
